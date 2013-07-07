@@ -1,0 +1,8 @@
+*.pyc
+*.pyo
+speedtest.csv
+speedtest.out
+speedtest.txt
+speedtest_allocated_memory_mb.tex
+speedtest_completion_time_secs.tex
+speedtest_cpu_time_secs.tex

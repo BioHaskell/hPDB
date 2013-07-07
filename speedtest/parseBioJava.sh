@@ -1,0 +1,5 @@
+#!/bin/bash
+
+MYCLASSPATH=/usr/share/java/biojava3-structure-3.0.4.jar:/usr/share/java/biojava3-modfinder-3.0.4.jar:/usr/share/java/biojava3-sequencing-3.0.4.jar:/usr/share/java/biojava3-structure-gui-3.0.4.jar:/usr/share/java/biojava3-phylo-3.0.4.jar:/usr/share/java/biojava3-genome-3.0.4.jar:/usr/share/java/biojava3-forester-3.0.4.jar:/usr/share/java/biojava3-core-3.0.4.jar:/usr/share/java/biojava3-protein-disorder-3.0.4.jar:/usr/share/java/biojava3-aa-prop-3.0.4.jar:/usr/share/java/biojava3-ws-3.0.4.jar:/usr/share/java/biojava3-alignment-3.0.4.jar:/usr/share/java/biojava3-alignment.jar:/usr/share/java/biojava3-phylo.jar:/usr/share/java/biojava3-ws.jar:/usr/share/java/biojava3-protein-disorder.jar:/usr/share/java/biojava3-structure-gui.jar:/usr/share/java/biojava3-sequencing.jar:/usr/share/java/biojava3-aa-prop.jar:/usr/share/java/biojava3-core.jar:/usr/share/java/biojava3-genome.jar:/usr/share/java/biojava3-forester.jar:/usr/share/java/biojava3-structure.jar:/usr/share/java/biojava3-modfinder.jar:java/
+
+time java -classpath $MYCLASSPATH PDBTest $*

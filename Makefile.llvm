@@ -1,0 +1,147 @@
+#!/usr/bin/make
+
+PRINTTARGET=short.pdb
+SOURCES=$(wildcard *.hs)
+#GHCOPTS=-O1
+GHCOPTS=-O3 -msse2 -rtsopts -fllvm
+#-rtsopts -prof -auto-all
+#GHC=ghc-cvs
+GHC=ghc-7.4.1
+PROFOPTS=-prof -auto-all -caf-all -fhpc -rtsopts=all -osuf .p_o
+# -fhpc - coverage data
+# Then: 
+# bash$ hpc report Run --exclude=Main --exclude=QC
+PDBDIR=/media/backup/pdb
+
+TAPROF=+RTS -p 
+HPPROF=+RTS -i0.001 -hc -p -K100M
+# To format heap profile into .ps:
+# hp2ps -e8in -c %.hp
+# -fforce-recomp -- forces recompilation of all modules
+
+test: PrintEvents PDB2Fasta Rg PrintStructureObject PrinterTest StericClashCheck 
+	time ./PrintEvents --errors-only 1CRN.pdb  && time ./PrintEvents --errors-only 3JYV.pdb && \
+	time ./PDB2Fasta 1CRN.pdb && \
+	time ./Rg 1CRN.pdb && \
+	time ./PrintStructureObject 1CRN.pdb /dev/null && \
+	time ./PrinterTest 1CRN.pdb > /dev/null && \
+	time ./StericClashCheck 1CRN.pdb 1CRN.pdb > /dev/null
+	time ./Viewer 1CRN.pdb
+
+PDB2Fasta: PDB2Fasta.hs
+	$(GHC) --make ${GHCOPTS} $@
+
+Rg: Rg.hs
+	$(GHC) --make ${GHCOPTS} $@
+
+PrintStructureObject: PrintStructureObject.hs
+	$(GHC) --make ${GHCOPTS} $@
+
+PrinterTest: PrinterTest.hs
+	$(GHC) --make ${GHCOPTS} $@
+
+StericClashCheck: StericClashCheck.hs
+	$(GHC) --make ${GHCOPTS} $@
+
+Viewer: Viewer.hs
+	$(GHC) -package OpenGL --make ${GHCOPTS} $@
+
+%.hi %.o: %.hs
+	${GHC} $<
+
+errors: PrintEvents
+	./PrintEvents --errors-only errors/*
+
+Rg.prof: Rg
+	$(GHC) --make ${GHCOPTS} Rg.hs ${PROFOPTS} 
+
+Rg.1CRN.prof: Rg.prof 1CRN.pdb
+	./Rg 1CRN.pdb ${TAPROF}
+	mv Rg.prof Rg.1CRN.prof
+
+Rg.3JYV.prof: Rg.prof 3JYV.pdb
+	./Rg 3JYV.pdb ${TAPROF}
+	mv Rg.prof Rg.3JYV.prof
+
+Rg.1HTQ.prof: Rg.prof 1HTQ.pdb
+	./Rg 1HTQ.pdb ${TAPROF}
+	mv Rg.prof Rg.1HTQ.prof
+
+Rg.profiles: Rg.1CRN.prof Rg.3JYV.prof Rg.1HTQ.prof
+
+PrintEvents.prof:
+	$(GHC) --make ${GHCOPTS} PrintEvents.hs ${PROFOPTS} #-fforce-recomp
+
+opt:	
+	$(GHC) --make ${GHCOPTS} -O2 PrintEvents.hs #-fforce-recomp
+
+coverage: PrintEvents.short.prof
+	hpc report PrintEvents
+
+todo: PrintEvents
+	./PrintEvents --unhandled short.pdb #3JYV.pdb
+
+timings:
+	@echo "GHC executable and options: ${GHC} ${GHCOPTS}" 
+	bash -c "time ./PrintEvents --errors-only 1CRN.pdb > /dev/null"
+	bash -c "time ./PrintEvents --errors-only 3JYV.pdb > /dev/null"
+	bash -c "time ./PrintEvents --errors-only 1HTQ.pdb > /dev/null"
+
+profiles: PrintEvents.prof PrintEvents.1CRN.prof PrintEvents.3JYV.prof PrintEvents.1HTQ.prof
+
+PrintEvents.short.prof: PrintEvents.prof short.pdb
+	./PrintEvents --errors-only short.pdb ${TAPROF}
+	mv PrintEvents.prof PrintEvents.short.prof
+
+PrintEvents.1CRN.prof: PrintEvents.prof 1CRN.pdb
+	./PrintEvents --errors-only 1CRN.pdb ${TAPROF}
+	mv PrintEvents.prof PrintEvents.1CRN.prof
+
+PrintEvents.3JYV.prof: PrintEvents.prof 3JYV.pdb
+	./PrintEvents --errors-only 3JYV.pdb ${TAPROF}
+	mv PrintEvents.prof PrintEvents.3JYV.prof
+
+PrintEvents.1HTQ.prof: PrintEvents.prof 1HTQ.pdb
+	./PrintEvents --errors-only 1HTQ.pdb ${TAPROF}
+	mv PrintEvents.prof PrintEvents.1HTQ.prof
+
+modres.txt:
+	for i in ${PDBDIR}/*/*.ent.gz; do nice -n 20 zgrep '^MODRES' $i; done | uniq --skip-chars=11 --check-chars=4 | sort -k3 -t' ' | uniq --skip-chars=11 --check-chars=4 > modres.txt
+
+print: PrintEvents
+	-@./PrintEvents --print ${PRINTTARGET} |diff -u -w - ${PRINTTARGET}
+
+all: locs PrintEvents
+
+# count lines of code
+locs:
+	haskell_count *.hs
+#Makefile: test
+
+PrintEvents: $(SOURCES)
+	$(GHC) --make ${GHCOPTS} PrintEvents.hs
+
+tags TAGS: $(SOURCES)
+	hasktags *.hs
+# Or try echo ":ctags" | ghci PrintEvents.hs
+
+Setup.lhs: hPDB.cabal
+	cabal configure --with-compiler=/usr/bin/ghc --with-hc-pkg=/usr/bin/ghc-pkg
+
+doc: Setup.lhs
+	cabal hscolour
+	cabal haddock --hyperlink-source 
+
+stat:
+	haskell_count *.hs
+
+clean:
+	find . -iname '*.hi' -or -iname '*.o' -or -iname '*.p_hi' -or -iname '*.p_o' -exec rm -f '\{\}' ';'
+	rm -f PrintEvents Rg          # compilation leftovers 
+	rm -f *.js *.css *.html *.gif # HADDOCK leftovers
+	rm -rf Setup.lhs dist         # CABAL leftovers
+
+record_stats.txt:
+	cut -c-6 1HTQ.pdb|sort|uniq -c|sort --numeric > record_stats.txt
+
+.PHONY: clean test PrintEvents.prof

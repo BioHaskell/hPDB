@@ -1,0 +1,55 @@
+ATOM      1  N   TRP A   1       1.278   1.121   2.059  1.00 10.00           N
+ATOM      2  CA  TRP A   1      -0.008   0.417   1.970  1.00 10.00           C
+ATOM      3  C   TRP A   1      -0.490   0.076   3.357  1.00 10.00           C
+ATOM      4  O   TRP A   1       0.308  -0.130   4.240  1.00 10.00           O
+ATOM      5  CB  TRP A   1       0.168  -0.868   1.161  1.00 10.00           C
+ATOM      6  CG  TRP A   1       0.650  -0.526  -0.225  1.00 10.00           C
+ATOM      7  CD1 TRP A   1       1.928  -0.418  -0.622  1.00 10.00           C
+ATOM      8  CD2 TRP A   1      -0.186  -0.256  -1.396  1.00 10.00           C
+ATOM      9  NE1 TRP A   1       1.978  -0.095  -1.951  1.00 10.00           N
+ATOM     10  CE2 TRP A   1       0.701   0.014  -2.454  1.00 10.00           C
+ATOM     11  CE3 TRP A   1      -1.564  -0.210  -1.615  1.00 10.00           C
+ATOM     12  CZ2 TRP A   1       0.190   0.314  -3.712  1.00 10.00           C
+ATOM     13  CZ3 TRP A   1      -2.044   0.086  -2.859  1.00 10.00           C
+ATOM     14  CH2 TRP A   1      -1.173   0.348  -3.907  1.00 10.00           C
+ATOM     15  OXT TRP A   1      -1.806   0.001   3.610  1.00 10.00           O
+ATOM     16  H   TRP A   1       1.921   0.493   2.518  1.00 10.00           H
+ATOM     17  H2  TRP A   1       1.611   1.237   1.113  1.00 10.00           H
+ATOM     18  HA  TRP A   1      -0.740   1.058   1.479  1.00 10.00           H
+ATOM     19  HB2 TRP A   1       0.900  -1.509   1.652  1.00 10.00           H
+ATOM     20  HB3 TRP A   1      -0.786  -1.390   1.095  1.00 10.00           H
+ATOM     21  HD1 TRP A   1       2.789  -0.564   0.012  1.00 10.00           H
+ATOM     22  HE1 TRP A   1       2.791   0.036  -2.462  1.00 10.00           H
+ATOM     23  HE3 TRP A   1      -2.248  -0.413  -0.804  1.00 10.00           H
+ATOM     24  HZ2 TRP A   1       0.860   0.521  -4.534  1.00 10.00           H
+ATOM     25  HZ3 TRP A   1      -3.110   0.116  -3.029  1.00 10.00           H
+ATOM     26  HH2 TRP A   1      -1.567   0.582  -4.885  1.00 10.00           H
+ATOM     27  HXT TRP A   1      -2.115  -0.217   4.500  1.00 10.00           H
+CONECT    1    2   16   17
+CONECT    2    1    3    5   18
+CONECT    3    2    4   15
+CONECT    4    3
+CONECT    5    2    6   19   20
+CONECT    6    5    7    8
+CONECT    7    6    9   21
+CONECT    8    6   10   11
+CONECT    9    7   10   22
+CONECT   10    8    9   12
+CONECT   11    8   13   23
+CONECT   12   10   14   24
+CONECT   13   11   14   25
+CONECT   14   12   13   26
+CONECT   15    3   27
+CONECT   16    1
+CONECT   17    1
+CONECT   18    2
+CONECT   19    5
+CONECT   20    5
+CONECT   21    7
+CONECT   22    9
+CONECT   23   11
+CONECT   24   12
+CONECT   25   13
+CONECT   26   14
+CONECT   27   15
+END   

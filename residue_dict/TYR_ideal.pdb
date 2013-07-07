@@ -1,0 +1,49 @@
+ATOM      1  N   TYR A   1       1.320   0.952   1.428  1.00 10.00           N
+ATOM      2  CA  TYR A   1      -0.018   0.429   1.734  1.00 10.00           C
+ATOM      3  C   TYR A   1      -0.103   0.094   3.201  1.00 10.00           C
+ATOM      4  O   TYR A   1       0.886  -0.254   3.799  1.00 10.00           O
+ATOM      5  CB  TYR A   1      -0.274  -0.831   0.907  1.00 10.00           C
+ATOM      6  CG  TYR A   1      -0.189  -0.496  -0.559  1.00 10.00           C
+ATOM      7  CD1 TYR A   1       1.022  -0.589  -1.219  1.00 10.00           C
+ATOM      8  CD2 TYR A   1      -1.324  -0.102  -1.244  1.00 10.00           C
+ATOM      9  CE1 TYR A   1       1.103  -0.282  -2.563  1.00 10.00           C
+ATOM     10  CE2 TYR A   1      -1.247   0.210  -2.587  1.00 10.00           C
+ATOM     11  CZ  TYR A   1      -0.032   0.118  -3.252  1.00 10.00           C
+ATOM     12  OH  TYR A   1       0.044   0.420  -4.574  1.00 10.00           O
+ATOM     13  OXT TYR A   1      -1.279   0.184   3.842  1.00 10.00           O
+ATOM     14  H   TYR A   1       1.977   0.225   1.669  1.00 10.00           H
+ATOM     15  H2  TYR A   1       1.365   1.063   0.426  1.00 10.00           H
+ATOM     16  HA  TYR A   1      -0.767   1.183   1.489  1.00 10.00           H
+ATOM     17  HB2 TYR A   1       0.473  -1.585   1.152  1.00 10.00           H
+ATOM     18  HB3 TYR A   1      -1.268  -1.219   1.134  1.00 10.00           H
+ATOM     19  HD1 TYR A   1       1.905  -0.902  -0.683  1.00 10.00           H
+ATOM     20  HD2 TYR A   1      -2.269  -0.031  -0.727  1.00 10.00           H
+ATOM     21  HE1 TYR A   1       2.049  -0.354  -3.078  1.00 10.00           H
+ATOM     22  HE2 TYR A   1      -2.132   0.523  -3.121  1.00 10.00           H
+ATOM     23  HH  TYR A   1      -0.123  -0.399  -5.059  1.00 10.00           H
+ATOM     24  HXT TYR A   1      -1.333  -0.030   4.784  1.00 10.00           H
+CONECT    1    2   14   15
+CONECT    2    1    3    5   16
+CONECT    3    2    4   13
+CONECT    4    3
+CONECT    5    2    6   17   18
+CONECT    6    5    7    8
+CONECT    7    6    9   19
+CONECT    8    6   10   20
+CONECT    9    7   11   21
+CONECT   10    8   11   22
+CONECT   11    9   10   12
+CONECT   12   11   23
+CONECT   13    3   24
+CONECT   14    1
+CONECT   15    1
+CONECT   16    2
+CONECT   17    5
+CONECT   18    5
+CONECT   19    7
+CONECT   20    8
+CONECT   21    9
+CONECT   22   10
+CONECT   23   12
+CONECT   24   13
+END   

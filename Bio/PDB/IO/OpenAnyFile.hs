@@ -1,0 +1,74 @@
+{-# LANGUAGE OverloadedStrings, CPP #-}
+
+-- | Opening and reading a either normal or gzipped file in an efficient way -
+-- either using strict 'ByteString' or mmap
+
+module Bio.PDB.IO.OpenAnyFile(readFile, writeFile)
+
+where
+
+import Prelude hiding   (readFile, writeFile)
+import System.Directory (doesFileExist, getPermissions, Permissions(..))
+import System.IO.Error  (userError, IOError)
+import System.IO        (withFile, IOMode(..))
+-- if we have zlib:
+import qualified Codec.Compression.GZip as GZip
+import qualified Data.ByteString.Lazy   as BSL
+import qualified Control.Exception      as Exc
+
+-- if we have bzlib
+--import qualified Codec.Compression.BZip as BZip
+
+-- if we have MMap:
+#ifdef HAVE_MMAP
+import System.IO.Posix.MMap(unsafeMMapFile)
+#endif
+
+-- otherwise:
+import qualified Data.ByteString.Char8 as BS
+
+readFile fname = do r <- isReadable fname
+                    if r
+                      then
+                        readFile' fname
+                      else
+                        throwNotFound fname
+
+readFile' fname = do content <- simpleRead fname
+                     let r = (let codec = getCodec fname content
+                              in BS.concat $ BSL.toChunks $ codec $ BSL.fromChunks [content])
+                     return r
+
+throwNotFound :: String -> IO a
+throwNotFound fname = ioError $ userError $ concat ["Cannot read ", show fname, "!"]
+
+getCodec fname c | (".gz" `BS.isSuffixOf` BS.pack fname) ||
+                   (".Z"  `BS.isSuffixOf` BS.pack fname) = GZip.decompressWith (gzipParams c)
+--getCodec fname c | (".bz2" `BS.isSuffixOf` (BS.pack fname)) = BZip.decompressWith (bzipParams c) -- DOESN'T WORK!!!
+getCodec fname c | otherwise                             = id
+
+gzipParams c = GZip.DecompressParams GZip.defaultWindowBits (fromIntegral (BS.length c * 5))
+#ifndef OLD_ZLIB
+               Nothing
+#endif
+  -- Upper bound: compression rate never exceeded 4.7 for big test files.
+
+--bzipParams c = BZip.DecompressParams BZip.DefaultMemoryLevel (fromIntegral (BS.length c * 7 + 4*1024*1024)) -- Upper bound: compression rate never exceeded 6.7 for big test files + 4MiB buffering.
+
+isReadable fname = do exists <- doesFileExist fname
+                      if exists
+                        then do perms <- getPermissions fname
+                                return $! readable perms 
+                        else return False
+
+#ifndef HAVE_MMAP
+simpleRead fname = BS.readFile fname
+#else
+simpleRead fname = unsafeMMapFile fname `Exc.catch` \e -> do reportError (e :: IOError)
+                                                             BS.readFile fname
+  where
+    reportError e = do putStrLn $ concat [show e, "while trying to mmap('", fname, "')"]
+#endif
+
+writeFile fname writer = do withFile fname WriteMode $ writer 
+                            return ()

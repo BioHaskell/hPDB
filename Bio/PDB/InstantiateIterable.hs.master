@@ -1,0 +1,39 @@
+{-# LANGUAGE TemplateHaskell, MultiParamTypeClasses, FlexibleInstances #-}
+module Bio.PDB.InstantiateIterable(Iterable(..), gen_iterable, trans_iterable) where
+
+import Bio.PDB.Structure.List as L
+import Language.Haskell.TH.Syntax
+import Control.Monad.Identity(runIdentity,foldM)
+import Data.List(foldl')
+
+class Iterable a b where
+  imapM   :: (Monad m) => (b -> m b) -> a -> m a
+  imap    ::              (b ->   b) -> a ->   a
+  imap f e = runIdentity $ imapM (\b -> return $ f b) e
+  ifoldM  :: (Monad m) => (c -> b -> m c) -> c -> a -> m c
+  ifoldr  ::              (b -> c ->   c) -> c -> a ->   c
+  ifoldl  ::              (c -> b ->   c) -> c -> a ->   c
+  ifoldl' ::              (c -> b ->   c) -> c -> a ->   c
+
+--gen_iterable :: Name -> Name -> Name -> Name -> Q [Dec]
+gen_iterable typA typB getter setter = 
+  [d| instance Iterable $(typA) $(typB) where
+        imapM f a =
+          do b' <- L.mapM f ( $(getter) a)
+             return $ $(setter) a b'
+        ifoldM  f e a  = do r <- L.foldM f e ( $(getter) a)
+                            return r
+        ifoldr  f e a = L.foldr  f e ( $(getter) a)
+        ifoldl  f e a = L.foldl  f e ( $(getter) a)
+        ifoldl' f e a = L.foldl' f e ( $(getter) a) |]
+
+trans_iterable typA typB typC = 
+  [d| instance Iterable $(typA) $(typC) where
+        imapM   f a   = (imapM   :: (Monad m) => ( $(typB) -> m $(typB) ) -> $(typA)   -> m $(typA) ) (imapM f) a 
+        imap    f a   = (imap    ::              ( $(typB) ->   $(typB) ) -> $(typA)   ->   $(typA) ) (imap  f) a 
+        ifoldM  f e a = (ifoldM  :: (Monad m) => (c -> $(typB) -> m c) -> c -> $(typA)   -> m c       ) (ifoldM  f) e a 
+        ifoldr  f e a = (ifoldr  ::              ($(typB) -> c ->   c) -> c -> $(typA)   ->   c       ) (\bb cc -> ifoldr  f cc bb) e a
+        ifoldl  f e a = (ifoldl  ::              (c -> $(typB) ->   c) -> c -> $(typA)   ->   c       ) (ifoldl  f) e a
+        ifoldl' f e a = (ifoldl' ::              (c -> $(typB) ->   c) -> c -> $(typA)   ->   c       ) (ifoldl' f) e a
+    |]
+

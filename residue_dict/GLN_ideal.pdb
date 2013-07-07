@@ -1,0 +1,41 @@
+ATOM      1  N   GLN A   1       1.858  -0.148   1.125  1.00 10.00           N
+ATOM      2  CA  GLN A   1       0.517   0.451   1.112  1.00 10.00           C
+ATOM      3  C   GLN A   1      -0.236   0.022   2.344  1.00 10.00           C
+ATOM      4  O   GLN A   1      -0.005  -1.049   2.851  1.00 10.00           O
+ATOM      5  CB  GLN A   1      -0.236  -0.013  -0.135  1.00 10.00           C
+ATOM      6  CG  GLN A   1       0.529   0.421  -1.385  1.00 10.00           C
+ATOM      7  CD  GLN A   1      -0.213  -0.036  -2.614  1.00 10.00           C
+ATOM      8  OE1 GLN A   1      -1.252  -0.650  -2.500  1.00 10.00           O
+ATOM      9  NE2 GLN A   1       0.277   0.236  -3.839  1.00 10.00           N
+ATOM     10  OXT GLN A   1      -1.165   0.831   2.878  1.00 10.00           O
+ATOM     11  H   GLN A   1       1.729  -1.148   1.137  1.00 10.00           H
+ATOM     12  H2  GLN A   1       2.286   0.078   0.240  1.00 10.00           H
+ATOM     13  HA  GLN A   1       0.605   1.537   1.099  1.00 10.00           H
+ATOM     14  HB2 GLN A   1      -0.324  -1.100  -0.122  1.00 10.00           H
+ATOM     15  HB3 GLN A   1      -1.231   0.431  -0.144  1.00 10.00           H
+ATOM     16  HG2 GLN A   1       0.617   1.508  -1.398  1.00 10.00           H
+ATOM     17  HG3 GLN A   1       1.524  -0.023  -1.375  1.00 10.00           H
+ATOM     18 HE21 GLN A   1      -0.200  -0.058  -4.630  1.00 10.00           H
+ATOM     19 HE22 GLN A   1       1.109   0.727  -3.930  1.00 10.00           H
+ATOM     20  HXT GLN A   1      -1.649   0.556   3.669  1.00 10.00           H
+CONECT    1    2   11   12
+CONECT    2    1    3    5   13
+CONECT    3    2    4   10
+CONECT    4    3
+CONECT    5    2    6   14   15
+CONECT    6    5    7   16   17
+CONECT    7    6    8    9
+CONECT    8    7
+CONECT    9    7   18   19
+CONECT   10    3   20
+CONECT   11    1
+CONECT   12    1
+CONECT   13    2
+CONECT   14    5
+CONECT   15    5
+CONECT   16    6
+CONECT   17    6
+CONECT   18    9
+CONECT   19    9
+CONECT   20   10
+END   

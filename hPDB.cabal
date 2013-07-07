@@ -1,0 +1,86 @@
+name:                hPDB
+version:             0.99
+stability:           beta
+homepage:            https://github.com/mgajda/hpdb
+package-url:         http://hackage.haskell.org/package/hPDB
+synopsis:            Parser, print and manipulate structures in PDB file format.
+description:         Protein Data Bank file format is a most popular format for holding biomolecule data. This is a very fast parser (below 7s for the largest entry in PDB - 1HTQ which is over 70MB - as compared with 11s of RASMOL 2.7.5, or 2m15s of BioPython with Python 2.6 interpreter.) It is aimed to not only deliver event-based interface, but also a high-level data structure for manipulating data in spirit of BioPython's PDB parser. 
+category:            Bioinformatics 
+license:             BSD3
+license-file:        LICENSE
+
+author:              Michal J. Gajda
+copyright:           Copyright by Michal J. Gajda '2009-'2012
+maintainer:          mjgajda@googlemail.com
+bug-reports:         mailto:mjgajda@googlemail.com
+
+build-type:          Simple
+cabal-version:       >=1.8
+tested-with:         GHC==7.4.1, GHC==7.0.3, GHC==7.4.2
+--Need to re-test: GHC==6.12.1,  GHC==7.0.4, GHC==7.1.20101026 
+
+flag have-mmap
+  description: Use bytestring-mmap to read input faster.
+  default: True
+
+flag have-sse2
+  description: Use -msse2 for faster code.
+  default: True
+
+flag old-text-format
+  description: Use text-format versions before 0.3.0.9 (and define Params instance for 11-tuple to 20-tuple yourself.)
+               Disable for (yet unreleased) versions after 0.3.0.8 when change was merged into upstream.
+  default: True
+
+flag old-bytestring
+  description: Use bytestring before version 0.10 (introduced in GHC 7.6), and define NFData for Data.ByteString yourself.
+               Disable for GHC 7.6.
+  default: False
+
+flag old-zlib
+  description: Use zlib before version 0.5.4 (introduced in GHC 7.6).
+               Disable for GHC 7.6.1
+  default: False
+
+flag old-vector
+  description: Use old vector library before version 0.10 (introduced along with GHC 7.6).
+               Disable for GHC 7.6.1 and latest 7.4.2.
+  default: False
+
+source-repository head
+  type:     git
+  location: git://github.com:mgajda/hpdb.git
+
+Library
+  ghc-options:      -fspec-constr-count=4 -O3 
+  build-depends:    base>=4.0, base <4.7, ghc-prim, directory, mtl, template-haskell, vector, AC-Vector, containers, deepseq, QuickCheck >= 2.5.0.0, text>=0.11.1.13
+  if flag(have-mmap)
+    build-depends: bytestring-mmap
+    cpp-options: -DHAVE_MMAP
+  if flag(have-sse2)
+    ghc-options: -fspec-constr-count=4 -O3 
+  if flag(old-text-format)
+    cpp-options: -DDEFINE_PARAMS_INSTANCES
+    build-depends: text-format <= 0.3.0.8
+  else
+    build-depends: text-format >= 0.3.0.9
+  if flag(old-bytestring)
+    cpp-options: -DDEFINE_NFDATA_INSTANCE
+    build-depends: bytestring <= 0.9.2.1
+  else
+    build-depends: bytestring >= 0.10.0.0
+  if flag(old-vector)
+    cpp-options: -DDEFINE_NFDATA_VECTOR
+    build-depends: vector < 0.10
+  else
+    build-depends: vector >= 0.10.0.0
+  if flag(old-zlib)
+    cpp-options: -DOLD_ZLIB
+    build-depends: zlib <= 0.5.3.3
+  else
+    build-depends: zlib >= 0.5.4.0
+  other-extensions:       ScopedTypeVariables OverloadedStrings BangPatterns NoMonomorphismRestriction EmptyDataDecls MagicHash
+  other-modules:    Bio.PDB.EventParser.ParseATOM, Bio.PDB.EventParser.ParseCAVEAT, Bio.PDB.EventParser.ParseCISPEP, Bio.PDB.EventParser.ParseCONECT, Bio.PDB.EventParser.ParseCRYST1, Bio.PDB.EventParser.ParseDBREF, Bio.PDB.EventParser.ParseFORMUL, Bio.PDB.EventParser.ParseHEADER, Bio.PDB.EventParser.ParseHELIX, Bio.PDB.EventParser.ParseHET, Bio.PDB.EventParser.ParseHETNAM, Bio.PDB.EventParser.ParseHYDBND, Bio.PDB.EventParser.ParseIntRecord, Bio.PDB.EventParser.ParseJRNL, Bio.PDB.EventParser.ParseLINK, Bio.PDB.EventParser.ParseListRecord, Bio.PDB.EventParser.ParseMASTER, Bio.PDB.EventParser.ParseMatrixRecord, Bio.PDB.EventParser.ParseMODRES, Bio.PDB.EventParser.ParseObsoleting, Bio.PDB.EventParser.ParseREMARK, Bio.PDB.EventParser.ParseREVDAT, Bio.PDB.EventParser.ParseSEQADV, Bio.PDB.EventParser.ParseSEQRES, Bio.PDB.EventParser.ParseSHEET, Bio.PDB.EventParser.ParseSITE, Bio.PDB.EventParser.ParseSLTBRG, Bio.PDB.EventParser.ParseSpecListRecord, Bio.PDB.EventParser.ParseSPLIT, Bio.PDB.EventParser.ParseSSBOND, Bio.PDB.EventParser.ParseTER, Bio.PDB.EventParser.ParseTITLE, Bio.PDB.EventParser.ParseTVECT, Bio.PDB.EventParser.PDBParsingAbstractions, Bio.PDB.EventParser.FastParse, Bio.PDB.Util.MissingInstances, Bio.PDB.Common, Bio.PDB.InstantiateIterable, Bio.PDB.Iterable.Utils
+  exposed-modules:  Bio.PDB.EventParser.PDBEvents, Bio.PDB.EventParser.PDBEventParser, Bio.PDB.EventParser.ExperimentalMethods, Bio.PDB.EventParser.HelixTypes, Bio.PDB.EventParser.StrandSense, Bio.PDB.Structure, Bio.PDB.StructureBuilder, Bio.PDB.Iterable, Bio.PDB.IO, Bio.PDB.Fasta, Bio.PDB, Bio.PDB.Structure.Vector, Bio.PDB.Structure.Elements, Bio.PDB.Structure.List, Bio.PDB.StructurePrinter, Bio.PDB.EventParser.PDBEventPrinter, Bio.PDB.IO.OpenAnyFile
+  exposed:          True
+

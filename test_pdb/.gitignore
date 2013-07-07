@@ -1,0 +1,5 @@
+pdb*.rec
+pdb*.log
+pdb*.err
+pdb*.time
+STATISTICS_GATHERED

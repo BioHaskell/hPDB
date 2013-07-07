@@ -1,0 +1,41 @@
+ATOM      1  N   MET A   1      -1.816   0.142  -1.166  1.00 10.00           N
+ATOM      2  CA  MET A   1      -0.392   0.499  -1.214  1.00 10.00           C
+ATOM      3  C   MET A   1       0.206   0.002  -2.504  1.00 10.00           C
+ATOM      4  O   MET A   1      -0.236  -0.989  -3.033  1.00 10.00           O
+ATOM      5  CB  MET A   1       0.334  -0.145  -0.032  1.00 10.00           C
+ATOM      6  CG  MET A   1      -0.273   0.359   1.277  1.00 10.00           C
+ATOM      7  SD  MET A   1       0.589  -0.405   2.678  1.00 10.00           S
+ATOM      8  CE  MET A   1      -0.314   0.353   4.056  1.00 10.00           C
+ATOM      9  OXT MET A   1       1.232   0.661  -3.066  1.00 10.00           O
+ATOM     10  H   MET A   1      -1.865  -0.864  -1.220  1.00 10.00           H
+ATOM     11  H2  MET A   1      -2.149   0.399  -0.248  1.00 10.00           H
+ATOM     12  HA  MET A   1      -0.287   1.582  -1.158  1.00 10.00           H
+ATOM     13  HB2 MET A   1       1.391   0.119  -0.068  1.00 10.00           H
+ATOM     14  HB3 MET A   1       0.229  -1.229  -0.088  1.00 10.00           H
+ATOM     15  HG2 MET A   1      -1.330   0.094   1.313  1.00 10.00           H
+ATOM     16  HG3 MET A   1      -0.168   1.442   1.333  1.00 10.00           H
+ATOM     17  HE1 MET A   1       0.090  -0.010   5.000  1.00 10.00           H
+ATOM     18  HE2 MET A   1      -0.207   1.436   4.008  1.00 10.00           H
+ATOM     19  HE3 MET A   1      -1.369   0.088   3.988  1.00 10.00           H
+ATOM     20  HXT MET A   1       1.616   0.342  -3.894  1.00 10.00           H
+CONECT    1    2   10   11
+CONECT    2    1    3    5   12
+CONECT    3    2    4    9
+CONECT    4    3
+CONECT    5    2    6   13   14
+CONECT    6    5    7   15   16
+CONECT    7    6    8
+CONECT    8    7   17   18   19
+CONECT    9    3   20
+CONECT   10    1
+CONECT   11    1
+CONECT   12    2
+CONECT   13    5
+CONECT   14    5
+CONECT   15    6
+CONECT   16    6
+CONECT   17    8
+CONECT   18    8
+CONECT   19    8
+CONECT   20    9
+END   
