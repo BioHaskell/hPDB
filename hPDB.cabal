@@ -1,28 +1,28 @@
 name:                hPDB
-version:             0.99
-stability:           beta
+version:             0.99.1
+synopsis:            Protein Databank file format library
 homepage:            https://github.com/mgajda/hpdb
+stability:           beta
 package-url:         http://hackage.haskell.org/package/hPDB
-synopsis:            Parser, print and manipulate structures in PDB file format.
 description:         Protein Data Bank file format is a most popular format for holding biomolecule data.
-
   This is a very fast parser (below 7s for the largest entry in PDB - 1HTQ which is over 70MB - as compared with 11s of RASMOL 2.7.5, or 2m15s of BioPython with Python 2.6 interpreter.)
-
   It is aimed to not only deliver event-based interface, but also a high-level data structure for manipulating data in spirit of BioPython's PDB parser. 
-
 category:            Bioinformatics 
 license:             BSD3
 license-file:        LICENSE
 
 author:              Michal J. Gajda
-copyright:           Copyright by Michal J. Gajda '2009-'2012
+copyright:           Copyright by Michal J. Gajda '2009-'2013
 maintainer:          mjgajda@googlemail.com
 bug-reports:         mailto:mjgajda@googlemail.com
 
 build-type:          Simple
 cabal-version:       >=1.8
-tested-with:         GHC==7.4.1, GHC==7.0.3, GHC==7.4.2
---Need to re-test: GHC==6.12.1,  GHC==7.0.4, GHC==7.1.20101026 
+tested-with:         GHC==7.4.1, GHC==7.0.3, GHC==7.4.2, GHC==7.6.1
+
+source-repository head
+  type:     git
+  location: https://github.com/mgajda/hPDB
 
 flag have-mmap
   description: Use bytestring-mmap to read input faster.
