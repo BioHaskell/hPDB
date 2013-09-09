@@ -25,6 +25,7 @@ type String = BS.ByteString
 -- Until I get a newer version of Control.DeepSeq:
 force x = x `deepseq` x
 
+-- | Parse a .pdb file and return `Bio.PDB.Structure.Structure`.
 parse :: String -> IO (Maybe Bio.PDB.Structure.Structure)
 parse filename = do input <- Bio.PDB.IO.OpenAnyFile.readFile $ BS.unpack filename
                     (do (structure, errs) <- return $ Bio.PDB.StructureBuilder.parse filename input
@@ -33,18 +34,21 @@ parse filename = do input <- Bio.PDB.IO.OpenAnyFile.readFile $ BS.unpack filenam
                       `Control.Exception.catch`
                      (exceptionHandler filename))
 
+-- | Default exception handler that for `IO (Maybe a)` just prints nice error message to stderr, and returns Nothing
 exceptionHandler :: String -> SomeException -> IO (Maybe a)
 exceptionHandler filename e = do printError $ [filename, ":", BS.pack $ show e]
                                  return Nothing
 
+-- | Prints a catenated list of ByteStrings to stderr. (Convenience function.)
 printError msg = BS.hPutStrLn System.IO.stderr $ BS.concat msg
 
+-- | Show error message from `PDBParser`.
 showError filename (PDBParseError line_no col_no msg) =
   printError $ [filename, ":", BS.pack $ show line_no, ":", BS.pack $ show col_no, "\t", msg]
 showError filename (PDBIgnoredLine line)              =
   printError $ [filename, ": IGNORED ", line]
 
--- | Write structure to a .pdb file. (NOT YET IMPLEMENTED)
+-- | Write structure to a .pdb file.
 write :: Bio.PDB.Structure.Structure -> String -> IO ()
 write structure fname = writeFile (BS.unpack fname) $ \h -> PDBSP.write h structure
 
