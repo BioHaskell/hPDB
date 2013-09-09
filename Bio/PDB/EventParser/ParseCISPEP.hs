@@ -62,7 +62,7 @@ cispepFields = [(6,  mKeyword "record header"     "CISPEP"            ),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseCISPEP ::  (Monad m) => String -> Int -> m [PDBEvent]
-parseCISPEP line line_no = return $ if errs == []
+parseCISPEP line line_no = return $ if null errs
                                    then [result]
                                    else errs
   where

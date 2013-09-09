@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, BangPatterns #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Bio.PDB.Structure.Elements(Element(..),
                                   -- Finding element for a given atom
                                   assignElement,

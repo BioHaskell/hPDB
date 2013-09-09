@@ -37,7 +37,7 @@ nummdlFields = [(6,  mKeywords "record header" ["NUMMDL", "MODEL "]),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseIntRecord :: (Monad m) => (Int -> PDBEvent) ->  String -> Int -> m [PDBEvent]
-parseIntRecord cons line line_no = return $ if errs == []
+parseIntRecord cons line line_no = return $ if null errs
                                               then [result]
                                               else errs
   where

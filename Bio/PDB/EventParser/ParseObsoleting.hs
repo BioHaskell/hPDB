@@ -59,7 +59,7 @@ obsoletingFields = [(6,  mKeywords "record header"     ["OBSLTE", "SPRSDE"]),
 -- (3) input line number
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
-parseObsoleting cons line line_no = return $ if errs == []
+parseObsoleting cons line line_no = return $ if null errs
                                                then [result]
                                                else errs
   where

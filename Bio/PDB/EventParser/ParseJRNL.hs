@@ -47,7 +47,7 @@ titleFields = [(10, mKeywords "record header"    ["JRNL      ",
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseJournalRef :: (Monad m) => Bool -> BS.ByteString -> Int -> m [PDBEvent]
-parseJournalRef isFirst line line_no = return $ if errs == []
+parseJournalRef isFirst line line_no = return $ if null errs
                                                   then [result]
                                                   else errs
   where

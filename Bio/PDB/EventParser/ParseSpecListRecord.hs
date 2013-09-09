@@ -57,7 +57,7 @@ parseSpecListRecord cons line line_no = return $
     checkEntry :: [String] -> [PDBEvent]
     checkEntry [_, _] = []
     checkEntry [   _] = []
-    checkEntry entry  = [PDBParseError line_no 11 {- column where speclist begins -} $
+    checkEntry entry  = [PDBParseError line_no 11 {- column where speclist begins -}
                          ("Cannot parse specification list fragment: " `BS.append`
                           ( BS.pack . show $ entry))]
 

@@ -48,7 +48,7 @@ hetFields = [(6,  mKeyword "record header"     "HET   "            ),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseHET ::  (Monad m) => String -> Int -> m [PDBEvent]
-parseHET line line_no = return $ if errs == []
+parseHET line line_no = return $ if null errs
                                    then [result]
                                    else errs
   where

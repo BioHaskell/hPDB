@@ -94,12 +94,12 @@ siteFields = [(6,  mKeyword "record header"     "SITE  "            ),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseSITE ::  (Monad m) => String -> Int -> m [PDBEvent]
-parseSITE line line_no = return $ if errs == []
+parseSITE line line_no = return $ if null errs
                                    then [result]
                                    else errs
   where
     -- parse
-    errs = if fErrs == [] then fgErrs else fErrs
+    errs = if null fErrs then fgErrs else fErrs
     (fields, fErrs) = parseFields siteFields line line_no
     [fRec, _, fSerial, _, fSiteId, _, fNumRes, _,
      fResname1, _, fChain1, fResnum1, fInsCode1, _,

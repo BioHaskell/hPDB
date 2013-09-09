@@ -68,12 +68,12 @@ linkFields = [(6,  mKeyword "record header"     "LINK  "            ),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseLINK ::  (Monad m) => String -> Int -> m [PDBEvent]
-parseLINK line line_no = return $ if errs == []
+parseLINK line line_no = return $ if null errs
                                    then [result]
                                    else errs
   where
     -- parse
-    errs = if fErrs == [] then fgErrs else fErrs
+    errs = if null fErrs then fgErrs else fErrs
     (fields, fErrs) = parseFields linkFields line line_no
     [fRec, _,
      fAtName1, fAltLoc1, fResname1, _, fChain1, fResnum1, fInsCode1, _,

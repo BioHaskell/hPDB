@@ -43,7 +43,7 @@ remarkFields = [(6,  mKeyword "record header" "REMARK"),
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseREMARK :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
 parseREMARK line line_no = 
-    if errs == []
+    if null errs
       then (if (num == 1)                             && 
                not (BS.all (==' ') text)              &&
                not ("REFERENCE" `BS.isPrefixOf` text)

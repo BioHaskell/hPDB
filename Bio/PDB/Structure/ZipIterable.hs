@@ -1,4 +1,4 @@
-{-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, TypeFamilies #-}
+{-# LANGUAGE MultiParamTypeClasses, FlexibleInstances, TypeFamilies #-}
 module Bio.PDB.Structure.ZipIterable(Zipper   (..)   ,
                                      Zippable (..)   ,
                                      Container(..)   ,
@@ -38,17 +38,17 @@ data Zipper c = Zipper { current    :: c       ,
                          containing :: ZipUp c }
 
 znext zipper = case following zipper of
-                 (c:cs) -> Just $ Zipper { current    = c                  ,
-                                           preceding  = c:preceding zipper ,
-                                           following  = cs                 ,
-                                           containing = containing zipper  }
+                 (c:cs) -> Just Zipper { current    = c                  ,
+                                         preceding  = c:preceding zipper ,
+                                         following  = cs                 ,
+                                         containing = containing zipper  }
                  []     -> Nothing
 
 zprev zipper = case preceding zipper of
-                 (c:cs) -> Just $ Zipper { current    = c                  ,
-                                           preceding  = cs                 ,
-                                           following  = c:following zipper ,
-                                           containing = containing zipper  }
+                 (c:cs) -> Just Zipper { current    = c                  ,
+                                         preceding  = cs                 ,
+                                         following  = c:following zipper ,
+                                         containing = containing zipper  }
                  []     -> Nothing
 
 -- | Moves zipper up one level.
@@ -70,7 +70,7 @@ zdown z i = Zipper { current    = curr          ,
     n                  = L.length contentsVector
     contentsVector     = zgetter $ current c
     (prec, curr, succ) = vectorSplit errMsg i contentsVector
-    errMsg             = show $ current $ zipper
+    errMsg             = show $ current zipper
 
 vectorSplit errMsg i n v = if i >= n
                              then throw $ ZipperIndexError errMsg i n -- TODO: here one should raise a nice exception!

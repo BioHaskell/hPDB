@@ -44,7 +44,7 @@ titleFields = [( 6,  mKeyword "record header" "TVECT "),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseTVECT ::  (Monad m) => String -> Int -> m [PDBEvent]
-parseTVECT line line_no = return $ if errs == []
+parseTVECT line line_no = return $ if null errs
                                      then [result]
                                      else errs
   where

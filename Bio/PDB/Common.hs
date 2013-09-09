@@ -1,4 +1,3 @@
-{-# LANGUAGE StandaloneDeriving, BangPatterns #-}
 module Bio.PDB.Common(String(..), Vector3(..))
 
 where

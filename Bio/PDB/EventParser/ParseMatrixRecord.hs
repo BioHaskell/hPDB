@@ -52,7 +52,7 @@ titleFields = [(5,  mKeywords "record header" ["SCALE", "ORIGX", "TVECT", "MTRIX
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseMatrixRecord :: (Monad m) =>(Int -> Bool -> Int -> [Vector3] -> [Double] -> PDBEvent)-> String-> Int-> m [PDBEvent]
-parseMatrixRecord cons line line_no = return $ if errs == []
+parseMatrixRecord cons line line_no = return $ if null errs
                                                  then [result]
                                                  else errs
   where

@@ -278,9 +278,9 @@ mKeyword fname kwd = mKeywords fname [kwd]
 --
 -- (3) input
 convertColumns :: [String -> ParsedField] -> [Int] -> String -> [ParsedField]
-convertColumns convs cols s = map convert (zip convs content)
+convertColumns convs cols s = zipWith convert convs content
   where
-    convert (conv, s) = conv s
+    convert conv s = conv s
     content = splitByColumns s cols
 
 {-# INLINE findColumnErrors #-}

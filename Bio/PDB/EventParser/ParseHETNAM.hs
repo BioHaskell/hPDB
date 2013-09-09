@@ -42,7 +42,7 @@ hetnamFields = [(6,  mKeywords "record header"     ["HETNAM", "HETSYN"]),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseHETNAM :: (Monad m) => Bool -> String -> Int -> m [PDBEvent]
-parseHETNAM isNameNotSynonym line line_no = return $ if errs == []
+parseHETNAM isNameNotSynonym line line_no = return $ if null errs
                                                        then [result]
                                                        else errs
   where

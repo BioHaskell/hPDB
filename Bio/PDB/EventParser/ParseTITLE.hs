@@ -36,7 +36,7 @@ titleFields = [(6,  mKeyword "record header" "TITLE "),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseTITLE :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
-parseTITLE line line_no = return $ if errs == []
+parseTITLE line line_no = return $ if null errs
                                      then [result]
                                      else errs
   where

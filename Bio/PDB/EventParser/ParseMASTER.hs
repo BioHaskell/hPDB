@@ -62,7 +62,7 @@ masterFields = [(6,  mKeyword "record header" "MASTER"   ),
 -- (2) input line number
 --
 -- Result is a mionad action returning a list of 'PDBEvent's.
-parseMASTER line line_no = return $ if errs == []
+parseMASTER line line_no = return $ if null errs
                                    then [result]
                                    else errs
   where

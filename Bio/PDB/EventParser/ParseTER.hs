@@ -46,7 +46,7 @@ terFields = [(6,  mKeyword "record header" "TER   "),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseTER ::  (Monad m) => String -> Int -> m [PDBEvent]
-parseTER line line_no = return $ if errs == []
+parseTER line line_no = return $ if null errs
                                    then [result]
                                    else errs
   where

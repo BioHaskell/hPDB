@@ -70,7 +70,7 @@ add (TempList s vs) a = lift $ do i <- readSTRef s
                                   when (i < 0) $ fail "Negative STRef"
                                   let j = i + 1
                                       l = M.length v
-                                  v' <- if (j > l)
+                                  v' <- if j > l
                                           then do nV <- M.grow v j
                                                   writeSTRef vs nV
                                                   return nV

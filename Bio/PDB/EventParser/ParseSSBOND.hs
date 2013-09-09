@@ -63,7 +63,7 @@ ssbondFields = [(6,  mKeyword "record header"     "SSBOND"            ),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseSSBOND ::  (Monad m) => String -> Int -> m [PDBEvent]
-parseSSBOND line line_no = return $ if errs == []
+parseSSBOND line line_no = return $ if null errs
                                    then [result]
                                    else errs
   where

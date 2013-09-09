@@ -44,7 +44,7 @@ intList []           = []
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseCONECT :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
-parseCONECT line line_no = return $ if errs == []
+parseCONECT line line_no = return $ if null errs
                                       then [result]
                                       else errs
   where

@@ -48,9 +48,9 @@ crystFields = [(6,  mKeyword "record header" "CRYST1"),
 -- Result is a monad action returning a list of 'PDBEvent's.
 {-# SPECIALIZE parseCRYST1 :: BS.ByteString -> Int -> IO [PDBEvent] #-}
 parseCRYST1 :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
-parseCRYST1 line line_no = return $ if errs == []
+parseCRYST1 line line_no = return $ if null errs
                                       then [result]
-                                      else errs--}
+                                      else errs
   where
     -- parse
     (fields, errs) = parseFields crystFields line line_no

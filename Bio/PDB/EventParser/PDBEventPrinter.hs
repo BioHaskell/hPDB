@@ -9,7 +9,7 @@ import Text.Printf(hPrintf)
 import System.IO(Handle, IO, stderr)
 import qualified Data.ByteString.Char8 as BS
 import Data.String(IsString)
-import Control.Monad(mapM, return)
+import Control.Monad(mapM_, return)
 
 import Bio.PDB.EventParser.PDBEvents
 import qualified Bio.PDB.EventParser.ExperimentalMethods as ExperimentalMethods
@@ -37,18 +37,18 @@ print handle ATOM { no        = num,
                     elt       = e,
                     charge    = ch,
                     hetatm    = isHet
-                  } = do L.hPutStr handle . encodeUtf8 $ F.format "{}{} {}{}{} {}{}{}   {}{}{}{}{}       {}{}{}\n" args
+                  } = L.hPutStr handle . encodeUtf8 $ F.format "{}{} {}{}{} {}{}{}   {}{}{}{}{}       {}{}{}\n" args
   where
     -- ra justifies a ByteString to the right
     ra i = F.right i ' ' . decodeUtf8
     -- la justifies anything else (floating point or integer number) to the left
     la i = F.left  i ' '
     args = (recname, la 5 num, specfmt 4 3 atype,
-            conv al, ra 3 $ rtype,
+            conv al, ra 3 rtype,
             conv c, la 4 rid,
             conv rins,
             ca x, ca y, ca z, pa occ, pa bf,
-            ra 4 $ sid, ra 2 $ e, ra 2 $ ch)
+            ra 4 sid, ra 2 e, ra 2 ch)
     ca f = la 8 $ F.fixed 3 f -- align coordinate float
     pa f = la 6 $ F.fixed 2 f -- align property float
     recname = fromText $ if isHet then "HETATM" else "ATOM  "
@@ -110,7 +110,7 @@ print handle MODEL  { num=n } = hPrintf handle "MODEL     %4d\n" n
 print handle END    = hPrintf handle "END\n"
 print handle ENDMDL = hPrintf handle "ENDMDL\n"
 print handle CONECT { atoms=ats } = do hPrintf handle "CONECT"
-                                       mapM (hPrintf handle "%5d") ats
+                                       mapM_ (hPrintf handle "%5d") ats
                                        hPrintf handle "\n"
 print handle TER    { num     = n    ,
                       resname = r    ,
@@ -129,15 +129,14 @@ print handle MASTER { numRemark = nr,
                       numMaster = nmaster,
                       numConect = ncon,
                       numSeqres = nseq } = do hPrintf handle "MASTER    %5d    0" nr
-                                              mapM (hPrintf handle "%5d")
-                                                   [nhet, nhel, nsheet,
-                                                    nturn, nsite, nxform, nats,
-                                                    nmaster, ncon, nseq]
+                                              mapM_ (hPrintf handle "%5d")
+                                                    [nhet, nhel, nsheet,
+                                                     nturn, nsite, nxform, nats,
+                                                     nmaster, ncon, nseq]
                                               hPrintf handle "\n"
 print handle REMARK { num  = n,
-                      text = t } = do mapM (hPrintf handle "REMARK %4d %-80s\n" n .
-                                            BS.unpack) t
-                                      return ()
+                      text = t } = mapM_ (hPrintf handle "REMARK %4d %-80s\n" n .
+                                          BS.unpack) t
 {-              KEYWDS { continuation  :: !Int,
                          aList         :: ![String] }    |
                 AUTHOR { continuation  :: !Int,
@@ -149,11 +148,10 @@ print handle KEYWDS { continuation = c,
 print handle AUTHOR { continuation = c,
                       aList        = l } = printList handle "AUTHOR" "," c l
 print handle EXPDTA { continuation = c,
-                      expMethods   = e } = do mapM (hPrintf handle "EXPDTA   %c%-80s\n"
-                                                            (showContinuation c) .
-                                                    BS.unpack .
-                                                    ExperimentalMethods.showExpMethod) e
-                                              return ()
+                      expMethods   = e } = mapM_ (hPrintf handle "EXPDTA   %c%-80s\n"
+                                                          (showContinuation c) .
+                                                  BS.unpack .
+                                                  ExperimentalMethods.showExpMethod) e
 print handle TITLE { continuation = c,
                      title        = t } = hPrintf handle "TITLE   %c%-80s\n"
                                                          (showContinuation c)
@@ -162,8 +160,8 @@ print handle SEQRES { serial  = sn,
                       chain   = ch,
                       num     = n,
                       resList = l } = do hPrintf handle "SEQRES %3d %c %4d   " sn ch n
-                                         mapM (hPrintf handle "%3s " .
-                                               BS.unpack) l
+                                         mapM_ (hPrintf handle "%3s " .
+                                                BS.unpack) l
                                          -- TODO: split when longer than X residues
                                          hPrintf handle "\n"
 print handle COMPND { cont   = c,
@@ -200,11 +198,11 @@ print handle JRNL   { cont    = c,
     header :: String
     header  = if aJRNL then "JRNL        " else "REMARK    1 "
     [contd] = if c > 0 then show c else " "
-    printJRNL ((k,v):cs) = do hPrintf handle "%12s%4s %c %s\n"
-                                      (BS.unpack header)
-                                      (BS.unpack k)
-                                      contd
-                                      (BS.unpack v)
+    printJRNL ((k,v):cs) = hPrintf handle "%12s%4s %c %s\n"
+                                   (BS.unpack header)
+                                   (BS.unpack k)
+                                   contd
+                                   (BS.unpack v)
 
 -- print errors:
 print handle (PDBParseError c r s) = hPrintf stderr "ERROR: In line %d column %d: %s" c r
@@ -268,11 +266,11 @@ printList handle label sep c l = hPrintf handle "%6s  %c %-80s\n" (BS.unpack lab
 printMatrix :: Handle -> BS.ByteString -> Int -> [Vector3] -> [Double] -> IO ()
 printMatrix handle ident n []         []     = return ()
 printMatrix handle ident n (vec:vecs) (f:fs) = do hPrintf handle "%5s%c    " (BS.unpack ident) cn
-                                                  mapM printEntry [a, b, c]
+                                                  mapM_ printEntry [a, b, c]
                                                   hPrintf handle "      %9.5f\n" f
                                                   printMatrix handle ident (n+1) vecs fs
   where [cn] = show n
         printEntry :: Double -> IO ()
-        printEntry f = hPrintf handle "%10.6f" f
+        printEntry = hPrintf handle "%10.6f"
         Vector3 a b c = vec
 

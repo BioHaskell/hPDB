@@ -77,7 +77,7 @@ hydbndFields = [(6,  mKeyword "record header"     "HYDBND"            ),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseHYDBND :: (Monad m) => String -> Int -> m [PDBEvent]
-parseHYDBND line line_no = return $ if errs == []
+parseHYDBND line line_no = return $ if null errs
                                    then [result]
                                    else errs -- return $ [PDBParseError 0 0 $ BS.pack $ show $ Prelude.length fields]
   where

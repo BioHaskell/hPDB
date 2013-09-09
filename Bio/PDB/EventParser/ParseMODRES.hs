@@ -50,7 +50,7 @@ modresFields = [(6,  mKeyword "record header" "MODRES"     ),
 -- Result is a monad action returning a list of 'PDBEvent's.
 {-# SPECIALIZE parseMODRES :: BS.ByteString -> Int -> IO [PDBEvent] #-}
 parseMODRES :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
-parseMODRES line line_no = return $ if errs == []
+parseMODRES line line_no = return $ if null errs
                                      then [result]
                                      else errs
   where
@@ -62,7 +62,7 @@ parseMODRES line line_no = return $ if errs == []
     IFStr  stdres  = fStdRes
     IFStr  comment = fComment
 
-    errs = if fErrs == [] then fgErrs else fErrs
+    errs = if null fErrs then fgErrs else fErrs
     fgRes     = fgResidue True "modified" 15 fModRes fChain fSeqNum fInsCode
     fgErrs    = liftFgErrs line_no [fgRes]
     Right res = fgRes

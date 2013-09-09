@@ -37,7 +37,7 @@ headerFields = [(6,  mKeyword "header"         "HEADER"),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseHEADER :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
-parseHEADER line line_no = return $ if errs == [] then [result] else errs
+parseHEADER line line_no = return $ if null errs then [result] else errs
   where
     -- parse
     (fields, errs) = parseFields headerFields line line_no

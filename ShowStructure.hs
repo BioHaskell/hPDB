@@ -3,7 +3,7 @@
 module Main where
 
 import System.Environment(getProgName, getArgs)
-import System.Exit(exitWith, ExitCode(ExitSuccess), exitFailure)
+import System.Exit(exitWith, ExitCode(ExitSuccess), exitFailure, exitSuccess)
 import System.Console.GetOpt
 import Control.Exception(catch)
 import Control.Exception.Base(SomeException)
@@ -47,7 +47,7 @@ processFile :: Options -> Bool -> String -> IO ()
 processFile opts printFilename filename = do
             -- no need to do it after last file, takes little before first :-).
   structure <- Bio.PDB.IO.parse $ BS.pack filename
-  Prelude.putStrLn $ show structure
+  Prelude.print structure
 
 main = do
   args <- getArgs
@@ -55,5 +55,5 @@ main = do
   opts <- foldl (>>=) (return defaultOptions) actions
   let show_filenames = length filenames > 1
   mapM_ (processFile opts show_filenames) filenames
-  exitWith ExitSuccess -- TODO: only if no errors!
+  exitSuccess -- TODO: only if no errors!
 

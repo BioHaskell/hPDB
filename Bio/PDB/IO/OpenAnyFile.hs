@@ -11,6 +11,7 @@ import Prelude hiding   (readFile, writeFile)
 import System.Directory (doesFileExist, getPermissions, Permissions(..))
 import System.IO.Error  (userError, IOError)
 import System.IO        (withFile, IOMode(..))
+import Control.Monad    (void)
 -- if we have zlib:
 import qualified Codec.Compression.GZip as GZip
 import qualified Data.ByteString.Lazy   as BSL
@@ -35,8 +36,8 @@ readFile fname = do r <- isReadable fname
                         throwNotFound fname
 
 readFile' fname = do content <- simpleRead fname
-                     let r = (let codec = getCodec fname content
-                              in BS.concat $ BSL.toChunks $ codec $ BSL.fromChunks [content])
+                     let r = let codec = getCodec fname content
+                             in BS.concat $ BSL.toChunks $ codec $ BSL.fromChunks [content]
                      return r
 
 throwNotFound :: String -> IO a
@@ -45,7 +46,7 @@ throwNotFound fname = ioError $ userError $ concat ["Cannot read ", show fname, 
 getCodec fname c | (".gz" `BS.isSuffixOf` BS.pack fname) ||
                    (".Z"  `BS.isSuffixOf` BS.pack fname) = GZip.decompressWith (gzipParams c)
 --getCodec fname c | (".bz2" `BS.isSuffixOf` (BS.pack fname)) = BZip.decompressWith (bzipParams c) -- DOESN'T WORK!!!
-getCodec fname c | otherwise                             = id
+getCodec fname c                                         = id
 
 gzipParams c = GZip.DecompressParams GZip.defaultWindowBits (fromIntegral (BS.length c * 5))
 #ifndef OLD_ZLIB
@@ -62,7 +63,7 @@ isReadable fname = do exists <- doesFileExist fname
                         else return False
 
 #ifndef HAVE_MMAP
-simpleRead fname = BS.readFile fname
+simpleRead = BS.readFile 
 #else
 simpleRead fname = unsafeMMapFile fname `Exc.catch` \e -> do reportError (e :: IOError)
                                                              BS.readFile fname
@@ -70,5 +71,4 @@ simpleRead fname = unsafeMMapFile fname `Exc.catch` \e -> do reportError (e :: I
     reportError e = do putStrLn $ concat [show e, "while trying to mmap('", fname, "')"]
 #endif
 
-writeFile fname writer = do withFile fname WriteMode $ writer 
-                            return ()
+writeFile fname writer = void $ withFile fname WriteMode writer 

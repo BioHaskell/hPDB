@@ -82,7 +82,7 @@ dbrefFields = [( 6, mKeyword "record id" "DBREF "),
 -- Result is a monad action returning a list of 'PDBEvent's.
 {-# SPECIALIZE parseDBREF :: BS.ByteString -> Int -> IO [PDBEvent] #-}
 parseDBREF :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
-parseDBREF line line_no = return $ if errs == []
+parseDBREF line line_no = return $ if null errs
                                      then [result]
                                      else errs
   where
@@ -200,7 +200,7 @@ checkEqs line_no ((a, b, col_no):eqs) = if trim a /= trim b
 -- Result is a monad action returning a list of 'PDBEvent's.
 {-# SPECIALIZE parseDBREF12 :: (BS.ByteString, BS.ByteString) -> Int -> IO [PDBEvent] #-}
 parseDBREF12 :: (Monad m) => (BS.ByteString, BS.ByteString) -> Int -> m [PDBEvent]
-parseDBREF12 (!line1, !line2) !line_no = return $ if errs == []
+parseDBREF12 (!line1, !line2) !line_no = return $ if null errs
                                                     then [result]
                                                     else errs
   where

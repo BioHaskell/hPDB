@@ -41,7 +41,7 @@ caveatFields = [(6,  mKeyword "record header"     "CAVEAT"),
 --
 parseCAVEAT ::  (Monad m) => String -> Int -> m [PDBEvent]
 -- Result is a monad action returning a list of 'PDBEvent's.
-parseCAVEAT line line_no = return $ if errs == []
+parseCAVEAT line line_no = return $ if null errs
                                    then [result]
                                    else errs
   where

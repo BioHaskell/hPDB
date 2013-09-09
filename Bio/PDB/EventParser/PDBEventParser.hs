@@ -76,7 +76,7 @@ parsePDBLines !fname !input !line_no action acc =
       a | "ENDMDL" `BS.isPrefixOf` a -> cont1 $! return [ENDMDL] 
       a | "END"    `BS.isPrefixOf` a -> cont1 $! return [END]
       -- common error in treatment of TER - omitting rest of the record
-      "TER"                          -> cont1 $! return [TER { num = (-1), resname = "", chain = ' ', resid = (-1), insCode = ' ' }]
+      "TER"                          -> cont1 $! return [TER { num = -1, resname = "", chain = ' ', resid = -1, insCode = ' ' }]
       -- proper TER
       a | "TER"    `BS.isPrefixOf` a -> cont1 $! parseTER    line line_no
       a | "MASTER" `BS.isPrefixOf` a -> cont1 $! parseMASTER line line_no
@@ -140,7 +140,7 @@ parsePDBLines !fname !input !line_no action acc =
 -- | Parses a strict ByteString 'contents' named 'fname' and performs 'action'
 -- on events given by parsing chunks, returning accumulated results. Accumulator
 -- is primed by 'acc'.
-parsePDBRecords fname contents action acc = parsePDBLines fname contents 0 action acc
+parsePDBRecords fname contents = parsePDBLines fname contents 0
 
 -- | Checks whether line was ignored as unknown record type
 ignoreLine (PDBIgnoredLine _) = False

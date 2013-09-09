@@ -47,8 +47,8 @@ vnorm = C.vmag
 {-# INLINE vdihedral #-}
 -- | Compute dihedral between three bond vectors using spherical angle formula.
 vdihedral :: Vec3D -> Vec3D -> Vec3D -> Double
-vdihedral !a !b !c = (atan2 (vnorm b * (a `vdot`  (b `vcross` c)))
-                            ((a `vcross` b) `vdot` (b `vcross` c)) )
+vdihedral !a !b !c = atan2 (vnorm b * (a `vdot`  (b `vcross` c)))
+                           ((a `vcross` b) `vdot` (b `vcross` c))
 
 -- | Scalar product. (`*` indicates side on which one can put a scalar.)
 {-# INLINE (*|) #-}

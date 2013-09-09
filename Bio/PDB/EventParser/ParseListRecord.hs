@@ -53,7 +53,7 @@ listFields = [(6,  mKeywords "record header" ["KEYWDS",
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseListRecord :: (Monad m) =>(Int -> [String] -> PDBEvent)-> Char-> String-> Int-> m [PDBEvent]
-parseListRecord cons sep line line_no = return $ if errs == []
+parseListRecord cons sep line line_no = return $ if null errs
                                                    then [result]
                                                    else errs
   where

@@ -1,4 +1,4 @@
-{-# LANGUAGE BangPatterns, DisambiguateRecordFields, MultiParamTypeClasses, NamedFieldPuns, FlexibleContexts, OverloadedStrings, PatternGuards, RankNTypes #-}
+{-# LANGUAGE BangPatterns, DisambiguateRecordFields, MultiParamTypeClasses, NamedFieldPuns, FlexibleContexts, OverloadedStrings, RankNTypes #-}
 {-# LANGUAGE RecordWildCards #-} -- for convenient debugging
 {-# OPTIONS_GHC -fspec-constr-count=2 #-}
 module Bio.PDB.StructureBuilder(parse)
@@ -11,6 +11,7 @@ import qualified Control.Monad.ST      as ST
 import Control.Monad.State.Strict      as State 
 import Control.Monad(when)
 import Data.STRef                      as STRef
+import Data.Maybe(isNothing, isJust)
 
 import Bio.PDB.EventParser.PDBEvents(PDBEvent(..), RESID(..))
 import qualified Bio.PDB.EventParser.PDBEventParser(parsePDBRecords)
@@ -34,7 +35,7 @@ parsePDBRec = Bio.PDB.EventParser.PDBEventParser.parsePDBRecords
 -- | parsing or construction errors.
 parse fname contents = ST.runST $ do initial <- initializeState
                                      (s, e)  <- State.evalStateT parsing initial
-                                     return $! (s :: Structure, e :: L.List PDBEvent)
+                                     return (s :: Structure, e :: L.List PDBEvent)
   where parsing = do parsePDBRec fname contents (\() !ev -> parseStep ev) ()
                      closeStructure
                      s  <- State.gets currentStructure
@@ -52,7 +53,7 @@ data BState s = BState { currentResidue    :: Maybe Residue,
                          modelContents     :: L.TempList  s Chain,
                          structureContents :: L.TempList  s Model,
                          errors            :: L.TempList  s PDBEvent,
-                         line_no           :: STRef.STRef s Int
+                         lineNo           :: STRef.STRef s Int
                        }
 
 -- | Initial state of the structure record builder.
@@ -63,16 +64,16 @@ initializeState = do r  <- L.initialNew L.residueVectorSize
                      s  <- L.initialNew 1
                      e  <- L.initialNew 100
                      l  <- STRef.newSTRef 1
-                     return $ BState { currentResidue    = Nothing,
-                                       currentModel      = Nothing,
-                                       currentChain      = Nothing,
-                                       currentStructure  = Structure { models = L.empty },
-                                       residueContents   = r,
-                                       chainContents     = c,
-                                       modelContents     = m,
-                                       structureContents = s,
-                                       errors            = e,
-                                       line_no           = l }
+                     return BState { currentResidue    = Nothing,
+                                     currentModel      = Nothing,
+                                     currentChain      = Nothing,
+                                     currentStructure  = Structure { models = L.empty },
+                                     residueContents   = r,
+                                     chainContents     = c,
+                                     modelContents     = m,
+                                     structureContents = s,
+                                     errors            = e,
+                                     lineNo           = l }
 -- | Checks that a residue with a given identification tuple is current,
 -- | or if not, then closes previous residue (if present),
 -- | and marks a new ,,current'' residue in a state of builder.
@@ -109,8 +110,8 @@ checkChain name = do checkModel
   where
     chainChanged Nothing                               = True
     chainChanged (Just (Chain { chainId = oldChain })) = oldChain /= name
-    createChain l state = state { currentChain = Just $! Chain { chainId  = name,
-                                                                 residues = L.empty },
+    createChain l state = state { currentChain = Just Chain { chainId  = name,
+                                                              residues = L.empty },
                                   chainContents = l }
 
 
@@ -120,18 +121,18 @@ checkChain name = do checkModel
 --       [Otherwise one needs to report an error!]
 checkModel :: ParsingMonad t ()
 checkModel = do curModel <- State.gets currentModel
-                when (curModel == Nothing) $ openModel 1
+                when (isNothing curModel) $ openModel 1
 -- | Closes construction of a current residue and appends this residue to a current chain. (Monadic action.)
 --closeResidue :: State.State BState ()
 
 closeResidue :: ParsingMonad t ()
 closeResidue = do r <- State.gets currentResidue
-                  when (r /= Nothing) $ do let Just res = r
-                                           rc  <- State.gets residueContents
-                                           rf  <- L.finalize rc
-                                           cc  <- State.gets chainContents
-                                           cc' <- L.add cc $ res { Bio.PDB.Structure.atoms = rf }
-                                           State.modify clearResidue
+                  when (isJust r) $ do let Just res = r
+                                       rc  <- State.gets residueContents
+                                       rf  <- L.finalize rc
+                                       cc  <- State.gets chainContents
+                                       cc' <- L.add cc $ res { Bio.PDB.Structure.atoms = rf }
+                                       State.modify clearResidue
   where
     clearResidue st = st { currentResidue = Nothing }
 
@@ -142,21 +143,21 @@ closeChain :: ParsingMonad t ()
 closeChain = do closeResidue
                 c  <- State.gets currentChain
                 ac <- State.gets chainContents
-                when (c /= Nothing) $ do l   <- State.gets chainContents
-                                         l'  <- L.finalize l
-                                         let Just ch = c
-                                             ch' = ch { Bio.PDB.Structure.residues = l' }
-                                         m   <- State.gets currentModel
-                                         when (m == Nothing) $ do mli <- State.gets structureContents
-                                                                  i <- L.tempLength mli
-                                                                  openModel i
-                                                                  addError ["Trying to close chain when currentChain is ",
-                                                                            BS.pack . show $ ch,
-                                                                            " and currentModel is ",
-                                                                            BS.pack . show $ m]
-                                         ml  <- State.gets modelContents
-                                         ml' <- L.add ml ch'
-                                         State.modify clearChain
+                when (isJust c) $ do l   <- State.gets chainContents
+                                     l'  <- L.finalize l
+                                     let Just ch = c
+                                         ch' = ch { Bio.PDB.Structure.residues = l' }
+                                     m   <- State.gets currentModel
+                                     when (isNothing m) $ do mli <- State.gets structureContents
+                                                             i <- L.tempLength mli
+                                                             openModel i
+                                                             addError ["Trying to close chain when currentChain is ",
+                                                                       BS.pack . show $ ch,
+                                                                       " and currentModel is ",
+                                                                       BS.pack . show $ m]
+                                     ml  <- State.gets modelContents
+                                     ml' <- L.add ml ch'
+                                     State.modify clearChain
   where
     clearChain st = st { currentChain = Nothing }
 
@@ -165,11 +166,12 @@ closeChain = do closeResidue
 -- TODO: forgot about line/column number passing!
 addError :: [String] -> ParsingMonad t ()
 addError msg = do e  <- State.gets errors
-                  lnref <- State.gets line_no
+                  lnref <- State.gets lineNo
                   ln <- lift $ STRef.readSTRef lnref
                   lift $ STRef.modifySTRef lnref (+1)
                   L.add e $ anError ln
-  where anError ln = PDBParseError ln 0 $ BS.concat msg
+  where
+    anError ln = PDBParseError ln 0 $ BS.concat msg
 
 -- | Finalizes construction of current model
 closeModel :: ParsingMonad t ()
@@ -199,14 +201,14 @@ closeStructure = do closeModel
                structureContents = undefined }
 
 nextLine :: ParsingMonad t ()
-nextLine = do lnref <- State.gets line_no
+nextLine = do lnref <- State.gets lineNo
               lift $ STRef.modifySTRef lnref (+1)
 
 -- | Performs a match on a single PDBEvent and performs relevant change to a BState of structure builder.
 --parseStep   :: (State.MonadState BState m) => PDBEvent -> m ()
 parseStep pe@(PDBParseError l _ _) = do e  <- State.gets errors
                                         L.add e pe 
-                                        lnref <- State.gets line_no
+                                        lnref <- State.gets lineNo
                                         lift $ STRef.writeSTRef lnref l
 parseStep (ATOM { no        = atSer,      -- :: !Int,
                   atomtype  = atType,     -- :: !String,

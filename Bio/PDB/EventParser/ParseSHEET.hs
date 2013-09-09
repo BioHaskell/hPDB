@@ -100,7 +100,7 @@ helixFields = [(6,  mKeyword "record header" "SHEET "                  ),
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseSHEET ::  (Monad m) => String -> Int -> m [PDBEvent]
 parseSHEET line line_no = --return [Test $ BS.pack $ show $ ((length helixFields)::Int)]
-  return $ if errs == []
+  return $ if null errs
                                       then [result]
                                       else errs
   where

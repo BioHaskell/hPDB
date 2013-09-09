@@ -1,4 +1,4 @@
-{-# LANGUAGE BangPatterns, DisambiguateRecordFields #-}
+{-# LANGUAGE DisambiguateRecordFields #-}
 module Bio.PDB.Structure(String,
                          vdot, vnorm, vproj, vperpend, vperpends, vdihedral, (*|), (|*),
                          Structure(..), Model(..), Chain(..), Residue(..), Atom(..))

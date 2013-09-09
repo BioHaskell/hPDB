@@ -49,7 +49,7 @@ titleFields = [(6,  mKeyword "record header" "SPLIT "),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseSPLIT :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
-parseSPLIT line line_no = return $ if errs == []
+parseSPLIT line line_no = return $ if null errs
                                      then [result]
                                      else errs
   where

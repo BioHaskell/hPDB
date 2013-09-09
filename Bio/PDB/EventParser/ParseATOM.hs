@@ -124,7 +124,7 @@ atomFields = [
 -- Result is a monad action returning a list of 'PDBEvent's.
 --{-# SPECIALIZE parseATOM :: Bool -> String -> Int -> IO [PDBEvent] #-}
 parseATOM :: (Monad m) => String -> Int -> m [PDBEvent]
-parseATOM line line_no = return $ if errs == []
+parseATOM line line_no = return $ if null errs
                                     then [result]
                                     else errs
   where
@@ -234,7 +234,7 @@ anisouFields = [
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseANISOU :: (Monad m) => String -> Int -> m [PDBEvent]
-parseANISOU line line_no = return $ if errs == [] then result `seq` [result] else errs
+parseANISOU line line_no = return $ if null errs then result `seq` [result] else errs
   where
     -- parse
     (fields, errs) = parseFields anisouFields line line_no

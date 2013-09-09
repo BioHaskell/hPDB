@@ -69,7 +69,7 @@ splitResidues resStr = if BS.null resStr
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseSEQRES :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
-parseSEQRES line line_no = return $ if errs == []
+parseSEQRES line line_no = return $ if null errs
                                       then [result]
                                       else errs
   where

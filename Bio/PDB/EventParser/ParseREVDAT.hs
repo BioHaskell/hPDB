@@ -75,7 +75,7 @@ strListErrs line (c:cols) (x      :ls) = PDBParseError line c
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseREVDAT :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
-parseREVDAT line line_no = return $ if errs == []
+parseREVDAT line line_no = return $ if null errs
                                       then [result]
                                       else errs
   where

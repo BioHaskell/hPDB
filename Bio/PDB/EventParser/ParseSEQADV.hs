@@ -59,7 +59,7 @@ titleFields = [(6,  mKeyword "record header"  "SEQADV"               ),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseSEQADV :: (Monad m) => BS.ByteString -> Int -> m [PDBEvent]
-parseSEQADV line line_no = return $ if errs == []
+parseSEQADV line line_no = return $ if null errs
                                      then [result]
                                      else errs
   where
@@ -77,7 +77,7 @@ parseSEQADV line line_no = return $ if errs == []
                    IFNone       -> Nothing
     IFStr  comment   = fComment
 
-    errs      = if fErrs == [] then fgErrs else fErrs
+    errs      = if null fErrs then fgErrs else fErrs
     fgRes     = maybeFgResidue False "modified residue" 15 fResname fChain fSeqNum fInsCode
     fgErrs    = liftFgErrs line_no [fgRes]
     Right res = fgRes

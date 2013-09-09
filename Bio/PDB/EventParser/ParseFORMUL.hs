@@ -44,7 +44,7 @@ formulFields = [(6,  mKeyword "record header"     "FORMUL"),
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
 parseFORMUL ::  (Monad m) => String -> Int -> m [PDBEvent]
-parseFORMUL line line_no = return $ if errs == []
+parseFORMUL line line_no = return $ if null errs
                                    then [result]
                                    else errs
   where
