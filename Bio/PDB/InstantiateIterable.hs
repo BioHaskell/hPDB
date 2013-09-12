@@ -63,6 +63,4 @@ trans_iterable typA typB typC =
         ifoldl' f e a = (ifoldl' ::              (c -> $(typB)   ->   c) -> c   -> $(typA)   ->   c       ) (ifoldl' f) e a
         ilength _   a = (ifoldl' ::              (c -> $(typB)   ->   c) -> c   -> $(typA)   ->   c       ) (\a b-> a + ilength (undefined :: $(typC)) b) 0 a
     |]
--- How to make this work:
---       ilength     a = (ifoldl' ::              (Int -> $(typB) -> Int) -> Int -> $(typA)   ->   Int     ) (\i b -> i+(ilength :: Iterable $(typB) $(typC) => $(typB) -> Int) b) 0 a
 
