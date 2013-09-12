@@ -1,0 +1,30 @@
+Please use either `cabal install` or `runhaskell Setup configure --user`
+to install or configure the package. This is because `runhaskell Setup`
+defaults to use global package database, and thus may give spurious error
+messages, when the dependencies are installed in user's package database.
+
+For a fresh GHC install on Ubuntu, you may first need to `apt-get install
+zlib1g-dev` to get zlib header files.
+
+Troubleshooting:
+1. `runhaskell Setup configure` tells that dependencies are missing,
+even though I have them installed!
+
+Use `runhaskell Setup configure --user` or see Cabal FAQ:
+http://www.haskell.org/cabal/FAQ.html#runghc-setup-complains-of-missing-packages
+
+2. double-conversion dependency breaks the linking process with error:
+
+This is known GHC bug that may appear in FreeBSD and Windows:
+http://ghc.haskell.org/trac/ghc/ticket/5289
+
+Workaround is to switch off the flag that makes printing faster:
+Append `-f-have-double-conversion` to `cabal install` or `runhaskell Setup
+configure` arguments.
+
+3. [Windows] Cannot get `unix` dependency.
+
+Please switch off using bytestring-mmap package by appending flag
+`-f-have-mmap` to `cabal install` or `runhaskell Setup configure` arguments.
+
+TODO: try to change *.cabal file so it is done automatically.
