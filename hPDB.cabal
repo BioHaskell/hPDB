@@ -1,5 +1,5 @@
 name:                hPDB
-version:             0.99.1
+version:             0.999
 synopsis:            Protein Databank file format library
 homepage:            https://github.com/mgajda/hpdb
 stability:           beta
