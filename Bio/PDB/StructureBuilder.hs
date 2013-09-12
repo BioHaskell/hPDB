@@ -29,14 +29,14 @@ type ParsingMonad t a = State.StateT (BState t) (ST.ST t) a
 parsePDBRec :: String -> String -> (() -> PDBEvent -> ParsingMonad t ()) -> () -> ParsingMonad t ()
 parsePDBRec = Bio.PDB.EventParser.PDBEventParser.parsePDBRecords
 
---parse :: (State.MonadState BState m) => String -> String -> m (Structure, [PDBEvent])
 -- | Given filename, and contents, parses a whole PDB file, returning a monadic action
 -- | with a tuple of (Structure, [PDBEvent]), where the list of events contains all
 -- | parsing or construction errors.
+--parse :: (State.MonadState BState m) => FilePath -> String -> m (Structure, [PDBEvent])
 parse fname contents = ST.runST $ do initial <- initializeState
                                      (s, e)  <- State.evalStateT parsing initial
                                      return (s :: Structure, e :: L.List PDBEvent)
-  where parsing = do parsePDBRec fname contents (\() !ev -> parseStep ev) ()
+  where parsing = do parsePDBRec (BS.pack fname) contents (\() !ev -> parseStep ev) ()
                      closeStructure
                      s  <- State.gets currentStructure
                      e  <- State.gets errors
