@@ -22,7 +22,7 @@ import qualified Control.Exception      as Exc
 
 -- if we have MMap:
 #ifdef HAVE_MMAP
-import System.IO.Posix.MMap(unsafeMMapFile)
+import System.IO.MMap   (mmapFileByteString)
 #endif
 
 -- otherwise:
@@ -63,10 +63,10 @@ isReadable fname = do exists <- doesFileExist fname
                         else return False
 
 #ifndef HAVE_MMAP
-simpleRead = BS.readFile 
+simpleRead       = BS.readFile 
 #else
-simpleRead fname = unsafeMMapFile fname `Exc.catch` \e -> do reportError (e :: IOError)
-                                                             BS.readFile fname
+simpleRead fname = mmapFileByteString fname Nothing `Exc.catch` \e -> do reportError (e :: IOError) -- cannot mmap
+                                                                         BS.readFile fname
   where
     reportError e = do putStrLn $ concat [show e, "while trying to mmap('", fname, "')"]
 #endif

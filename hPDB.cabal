@@ -27,7 +27,7 @@ source-repository head
   location: https://github.com/mgajda/hPDB
 
 flag have-mmap
-  description: Use bytestring-mmap to read input faster.
+  description: Use mmap to read input faster.
   default: True
 
 flag have-sse2
@@ -62,7 +62,7 @@ Library
   ghc-options:      -fspec-constr-count=4 -O3 
   build-depends:    base>=4.0, base <4.7, ghc-prim, directory, mtl, template-haskell, vector, AC-Vector, containers, deepseq, QuickCheck >= 2.5.0.0, text>=0.11.1.13
   if flag(have-mmap)
-    build-depends: bytestring-mmap
+    build-depends: mmap
     cpp-options: -DHAVE_MMAP
   if flag(have-sse2)
     ghc-options: -fspec-constr-count=4 -O3 
