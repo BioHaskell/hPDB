@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, PatternGuards #-}
+{-# LANGUAGE OverloadedStrings, PatternGuards, CPP #-}
 module Bio.PDB.EventParser.PDBEventPrinter(print, isPrintable)
 
 where
@@ -11,15 +11,17 @@ import qualified Data.ByteString.Char8 as BS
 import Data.String(IsString)
 import Control.Monad(mapM_, return)
 
-import Bio.PDB.EventParser.PDBEvents
+import           Bio.PDB.EventParser.PDBEvents
 import qualified Bio.PDB.EventParser.ExperimentalMethods as ExperimentalMethods
+#ifdef HAVE_TEXT_FORMAT
 import qualified Data.ByteString.Lazy as L
-import Data.Text.Lazy.Encoding(encodeUtf8)
-import Data.Text.Encoding     (decodeUtf8)
+import           Data.Text.Lazy.Encoding(encodeUtf8)
+import           Data.Text.Encoding     (decodeUtf8)
 import qualified Data.Text.Lazy as LT
-import Data.Text.Lazy.Builder as B
+import           Data.Text.Lazy.Builder as B
 import qualified Data.Text.Format as F
 import qualified Data.Text.Buildable as BD
+#endif
 
 -- | Prints a PDBEvent to a filehandle.
 print :: Handle -> PDBEvent -> IO ()
@@ -37,7 +39,19 @@ print handle ATOM { no        = num,
                     elt       = e,
                     charge    = ch,
                     hetatm    = isHet
-                  } = L.hPutStr handle . encodeUtf8 $ F.format "{}{} {}{}{} {}{}{}   {}{}{}{}{}       {}{}{}\n" args
+                  } =
+#ifndef HAVE_TEXT_FORMAT
+    hPrintf handle
+           "%6s%5d  %-3s%c%-3s %c%4d%c   %8.3f%8.3f%8.3f%6.2f%6.2f       %-4s%-2s%-2s\n"
+                   recname
+                   num (BS.unpack atype) al (BS.unpack rtype) c rid rins
+                   x y z occ bf
+                   (BS.unpack sid) (BS.unpack e) (BS.unpack ch)
+  where
+    recname :: Prelude.String
+    recname = if isHet then "HETATM" else "ATOM  "
+#else
+    L.hPutStr handle . encodeUtf8 $ F.format "{}{} {}{}{} {}{}{}   {}{}{}{}{}       {}{}{}\n" args
   where
     -- ra justifies a ByteString to the right
     ra i = F.right i ' ' . decodeUtf8
@@ -56,6 +70,7 @@ print handle ATOM { no        = num,
     conv x = fromString [x]
     -- specfmt mimics erratic alignment of PDB atom types: up to three characters are justified left, after prefixing by single space.
     specfmt i j a = B.fromLazyText . LT.justifyRight i ' ' . LT.justifyLeft j ' ' . B.toLazyText . fromText . decodeUtf8 $ a
+#endif
 
 -- TODO: Note that this ANISOU code will be buggy for 4-letter atom codes that happen (rarely.)
 print handle ANISOU { no       = n, 
