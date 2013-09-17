@@ -28,3 +28,5 @@ Please switch off using bytestring-mmap package by appending flag
 `-f-have-mmap` to `cabal install` or `runhaskell Setup configure` arguments.
 
 TODO: try to change *.cabal file so it is done automatically.
+
+4. 
