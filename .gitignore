@@ -20,6 +20,5 @@ PrintEvents.*.hp
 tags
 TAGS
 record_stats.txt
-Setup.hs
 dist
 attic
