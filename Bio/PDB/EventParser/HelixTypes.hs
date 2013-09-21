@@ -1,12 +1,12 @@
 -- | Module contains enumeration of helix types, and auxiliary functions
--- for converting these into numeric PDB CLASS code.
+-- for converting these into PDB CLASS codes.
 module Bio.PDB.EventParser.HelixTypes(HelixT, helix2code, code2helix)
 where
 {-| Enumeration of helix types
 
 PDB Class number in columns 39-40 for each type of helix in HELIX record:
 
- (1) Right-handed alpha (default)
+ (1) Right-handed alpha (default, most common)
 
  (2) Right-handed omega
 
@@ -40,7 +40,7 @@ data HelixT = RightAlpha  |
               Polyproline
   deriving (Eq, Ord, Show, Read)
 
--- | helix2code converts a 'HelixT' enumeration into an PDB CLASS number.
+-- | helix2code converts a 'HelixT' enumeration into an PDB CLASS code.
 helix2code RightAlpha  =  1
 helix2code RightOmega  =  2
 helix2code RightPi     =  3
@@ -52,7 +52,7 @@ helix2code LeftGamma   =  8
 helix2code Ribbon2_7   =  9
 helix2code Polyproline = 10
 
--- | helix2code converts an PDB CLASS number into a 'HelixT' enumeration.
+-- | helix2code converts an PDB CLASS code into a 'HelixT' enumeration.
 code2helix  1 = RightAlpha
 code2helix  2 = RightOmega
 code2helix  3 = RightPi
