@@ -33,6 +33,7 @@ digitValue :: Char -> Int
 digitValue !c = ord c - ord '0'
 
 {-# INLINE final #-}
+{-# ANN final "HLint: ignore Too strict if" #-}
 final :: Bool -> Double -> Maybe Double
 final !sign !f = if sign then Just (-f) else Just f
 
