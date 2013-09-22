@@ -1,20 +1,23 @@
 {-# LANGUAGE MultiParamTypeClasses, FlexibleInstances, UndecidableInstances, OverlappingInstances, TemplateHaskell, FlexibleContexts #-}
+-- | Instances of Iterable class.
 module Bio.PDB.Iterable(Iterable(..)) where
 
+import Data.Iterable
+import Data.Iterable.Instantiate
+import Data.Iterable.Instantiate.Vector
+import Data.Vector
 import Bio.PDB.Structure.List as L
 import Bio.PDB.Structure 
 import Control.Monad.Identity
 import Control.Monad(foldM)
 
-import Bio.PDB.InstantiateIterable
+$(gen_vector_iterable [t| Structure |] [t| Model   |] [e| models   |] [e| (\s m -> s { models   = m }) |] )
 
-$(gen_iterable [t| Structure |] [t| Model   |] [e| models   |] [e| (\s m -> s { models   = m }) |] )
+$(gen_vector_iterable [t| Model     |] [t| Chain   |] [e| chains   |] [e| (\s m -> s { chains   = m }) |] )
 
-$(gen_iterable [t| Model     |] [t| Chain   |] [e| chains   |] [e| (\s m -> s { chains   = m }) |] )
+$(gen_vector_iterable [t| Chain     |] [t| Residue |] [e| residues |] [e| (\s m -> s { residues = m }) |] )
 
-$(gen_iterable [t| Chain     |] [t| Residue |] [e| residues |] [e| (\s m -> s { residues = m }) |] )
-
-$(gen_iterable [t| Residue   |] [t| Atom    |] [e| atoms    |] [e| (\s m -> s { atoms    = m }) |] )
+$(gen_vector_iterable [t| Residue   |] [t| Atom    |] [e| atoms    |] [e| (\s m -> s { atoms    = m }) |] )
 
 $(self_iterable [t| Structure |] )
 $(self_iterable [t| Model     |] )
