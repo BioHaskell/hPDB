@@ -17,7 +17,7 @@ data ExpMethod = XRayDiffraction         |
                  OtherExpMethod !BS.ByteString
   deriving (Show, Read, Eq, Ord)
 
--- | Generates an ExpMethod from words in PDB
+-- | Generates an 'ExpMethod' from words in PDB
 mkExpMethod :: [BS.ByteString] -> ExpMethod
 mkExpMethod ["X-RAY", "DIFFRACTION"]        = XRayDiffraction
 mkExpMethod ["FIBER", "DIFFRACTION"]        = FiberDiffraction
@@ -29,7 +29,7 @@ mkExpMethod ["SOLUTION", "NMR"]             = SolutionNMR
 mkExpMethod ["SOLUTION", "SCATTERING"]      = SolutionScattering
 mkExpMethod other                           = OtherExpMethod (BS.unwords other) -- error-like
 
--- | Converts an ExpMethod back into text
+-- | Converts an 'ExpMethod' back into text
 showExpMethod :: ExpMethod -> BS.ByteString
 showExpMethod XRayDiffraction         = "X-RAY DIFFRACTION"
 showExpMethod FiberDiffraction        = "FIBER DIFFRACTION"
