@@ -28,6 +28,7 @@ import System.IO.MMap   (mmapFileByteString)
 -- otherwise:
 import qualified Data.ByteString.Char8 as BS
 
+-- | Read file contents as strict 'ByteString'. Uses mmap if possible. May decompress file contents, if needed.
 readFile fname = do r <- isReadable fname
                     if r
                       then
@@ -71,4 +72,5 @@ simpleRead fname = mmapFileByteString fname Nothing `Exc.catch` \e -> do reportE
     reportError e = do putStrLn $ concat [show e, "while trying to mmap('", fname, "')"]
 #endif
 
+-- | Write file contents as strict 'ByteString'.
 writeFile fname writer = void $ withFile fname WriteMode writer 

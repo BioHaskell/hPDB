@@ -12,16 +12,16 @@ import Test.QuickCheck
 
 -- ^ This module wraps 3D vector operations, and adds missing ones.
 
--- | Unpacks an abstract 3D vector into a triple of Doubles.
+-- | Unpacks an abstract 3D vector into a triple of 'Double's.
 unpackVector3 :: Vector3 -> (Double, Double, Double)
 unpackVector3 (Vector3 x y z) = (x, y, z)
 
--- | Maps an operation that modifies a Double onto a 3D vector.
+-- | Maps an operation that modifies a 'Double' onto a 3D vector.
 {-# INLINE vmap #-}
 vmap :: (Double -> Double) -> Vector3 -> Vector3
 vmap = C.vmap
 
--- | Maps an operation on a pair of Doubles onto a pair of 3D vectors
+-- | Maps an operation on a pair of 'Double's onto a pair of 3D vectors
 --   coordinatewise.
 vzip :: (Double -> Double -> Double) -> Vector3 -> Vector3 -> Vector3
 vzip = C.vzip
@@ -47,12 +47,12 @@ vdihedral :: Vector3 -> Vector3 -> Vector3 -> Double
 vdihedral !a !b !c = atan2 (vnorm b * (a `vdot`  (b `vcross` c)))
                            ((a `vcross` b) `vdot` (b `vcross` c))
 
--- | Scalar product. (`*` indicates side on which one can put a scalar.)
+-- | Scalar product. (asterisk - "*" - indicates side on which one can put a scalar.)
 {-# INLINE (*|) #-}
 (*|) :: Double -> Vector3  -> Vector3
 (*|) = (C.*|)
 
--- | Scalar product. (`*` indicates side on which one can put a scalar.)
+-- | Scalar product. (asterisk - "*" - indicates side on which one can put a scalar.)
 {-# INLINE (|*) #-}
 (|*) :: Vector3  -> Double -> Vector3
 (|*) = (C.|*)
