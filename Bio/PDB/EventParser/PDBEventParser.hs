@@ -1,4 +1,5 @@
 {-# LANGUAGE ScopedTypeVariables, OverloadedStrings, BangPatterns, NoMonomorphismRestriction #-}
+-- | Low-level event-based parser interface.
 module Bio.PDB.EventParser.PDBEventParser(parsePDBRecords)
 where
 

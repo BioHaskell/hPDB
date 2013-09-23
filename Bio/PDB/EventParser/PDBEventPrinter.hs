@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings, PatternGuards, CPP #-}
+-- | Low-level output routines: printing any 'PDBEvent'.
 module Bio.PDB.EventParser.PDBEventPrinter(print, isPrintable)
 
 where
@@ -227,9 +228,11 @@ print handle (PDBParseError c r s) = hPrintf stderr "ERROR: In line %d column %d
 print handle e                     = hPrintf stderr "UNIMPLEMENTED: %s\n"
                                                     (show e)
 
+-- | For indicating continuation of the record in previous line as a digit with line number.
 showContinuation 0                 = ' '
 showContinuation x | [c] <- show x = c
 
+-- | For indicating continuation of the text in previous line by indent.
 contd 0 s = s
 contd x s = ' ' : s
                                          
@@ -266,18 +269,21 @@ isPrintable JRNL   {}           = True
 isPrintable (PDBParseError c r s) = True
 isPrintable _                     = False
 
+-- | Prints a list of words as a PDB speclist record (see 'Bio.PDB.EventParser.ParseSpecListRecord'.)
 printSpecList handle rectype c ((k, v): ls) = hPrintf handle "%6s   %c%-s:%-s;\n"
                                                              (BS.unpack rectype)
                                                              (showContinuation c)
                                                              (contd c $ BS.unpack k)
                                                              (BS.unpack v)
 
+-- | Prints a list of words as a PDB list record (see 'Bio.PDB.EventParser.ParseSpecListRecord'.)
 printList :: Handle -> BS.ByteString -> BS.ByteString -> Int -> [BS.ByteString] -> IO ()
 printList handle label sep c l = hPrintf handle "%6s  %c %-80s\n" (BS.unpack label)
                                                                   (showContinuation c)
                                                                   str
   where str = BS.unpack (BS.intercalate sep l)
 
+-- | Prints a matrix given as a list of 'Vector3's.
 printMatrix :: Handle -> BS.ByteString -> Int -> [Vector3] -> [Double] -> IO ()
 printMatrix handle ident n []         []     = return ()
 printMatrix handle ident n (vec:vecs) (f:fs) = do hPrintf handle "%5s%c    " (BS.unpack ident) cn

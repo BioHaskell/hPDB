@@ -1,4 +1,5 @@
 {-# LANGUAGE NamedFieldPuns, DisambiguateRecordFields #-}
+-- | High-level output routines for 'Structure'.
 module Bio.PDB.StructurePrinter(write) where
 
 import Prelude hiding(print)

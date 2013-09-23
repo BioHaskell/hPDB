@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings  #-}
-
+-- | Simple input/output wrappers taking filenames, and handling compression.
 module Bio.PDB.IO(parse, write) where
 
 import qualified Control.Exception(catch)
@@ -20,9 +20,11 @@ import qualified Data.ByteString.Char8 as BS
 import Bio.PDB.IO.OpenAnyFile
 import Control.DeepSeq
 
+-- | Type alias.
 type String = BS.ByteString
 
 -- Until I get a newer version of Control.DeepSeq:
+-- | Alias to a function present in newer versions of 'deepseq' library.
 force x = x `deepseq` x
 
 -- | Parse a .pdb file and return `Bio.PDB.Structure.Structure`.

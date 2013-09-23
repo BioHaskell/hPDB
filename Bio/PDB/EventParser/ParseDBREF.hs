@@ -1,6 +1,5 @@
 {-# LANGUAGE ScopedTypeVariables, OverloadedStrings, BangPatterns  #-}
-
--- Parsing cross-references to other databases.
+-- | Parsing cross-references to other databases.
 module Bio.PDB.EventParser.ParseDBREF(parseDBREF, parseDBREF12)
 where
 

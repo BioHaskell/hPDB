@@ -30,8 +30,8 @@ vzip = C.vzip
 vnormalise :: Vector3 -> Vector3
 vnormalise = C.vnormalise 
 
--- | Computes a dot product of two 3D vectors.
 {-# INLINE vdot #-}
+-- | Computes a dot product of two 3D vectors.
 vdot :: Vector3 -> Vector3 -> Double
 vdot = C.vdot
 
@@ -46,13 +46,13 @@ vdihedral :: Vector3 -> Vector3 -> Vector3 -> Double
 vdihedral !a !b !c = atan2 (vnorm b * (a `vdot`  (b `vcross` c)))
                            ((a `vcross` b) `vdot` (b `vcross` c))
 
--- | Scalar product. (asterisk - "*" - indicates side on which one can put a scalar.)
 {-# INLINE (*|) #-}
+-- | Scalar product. (asterisk - "*" - indicates side on which one can put a scalar.)
 (*|) :: Double -> Vector3  -> Vector3
 (*|) = (C.*|)
 
--- | Scalar product. (asterisk - "*" - indicates side on which one can put a scalar.)
 {-# INLINE (|*) #-}
+-- | Scalar product. (asterisk - "*" - indicates side on which one can put a scalar.)
 (|*) :: Vector3  -> Double -> Vector3
 (|*) = (C.|*)
 
@@ -68,6 +68,7 @@ vproj    v w = vmap (*scale) uw
 vperpend v w = v - (v `vproj` w)
 
 
+{-# INLINE vperpends #-}
 -- | Finds a component of the vector v that is perpendicular to all vectors in a list.
 vperpends v ws = foldl' vperpend v ws
 

@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
-
+-- | Conversion of PDB residue codes to FASTA single-letter sequence codes.
 module Bio.PDB.Fasta(resname2fastacode, fastacode2resname  ,
                      defaultResname,    defaultFastaCode   ,
                      fastaSequence,     fastaGappedSequence,
@@ -10,7 +10,7 @@ import Bio.PDB.Structure as PDB
 import Data.Map          as Map
 
 -- | Standard nucleic acid codes
-codebook_nucleic_acids = [
+codebookNucleicAcids = [
   -- RNA codes
   ("A",  'A'),
   ("C",  'C'),
@@ -28,10 +28,10 @@ codebook_nucleic_acids = [
   ]
 
 -- | List of all correspondences between FASTA 1-letter codes, and PDB 3-letter codes.
-codebook = codebook_nucleic_acids ++ codebook_protein
+codebook = codebookNucleicAcids ++ codebookProtein
 
 -- | Standard protein codes
-codebook_standard_protein = [
+codebookStandardProtein = [
   ("ALA", 'A'),
   ("CYS", 'C'),
   ("ASP", 'D'),
@@ -57,7 +57,7 @@ codebook_standard_protein = [
   ("TYR", 'Y')]
 
 -- | List of both standard and non-standard protein codes.
-codebook_protein = codebook_standard_protein ++ [
+codebookProtein = codebookStandardProtein ++ [
   -- Protein codes (common variants)
   ("MSE", 'M')] -- selenomethionine
 
@@ -66,7 +66,7 @@ resname2fastacodeDictionary = Map.fromList codebook
 
 -- | Dictionary of translations from 1-letter FASTA aminoacid (standard
 --   protein) codes into 3-letter PDB codes.
-fastacode2resnameDictionary = Map.fromList . Prelude.map (\(a, b) -> (b, a)) $ codebook_standard_protein
+fastacode2resnameDictionary = Map.fromList . Prelude.map (\(a, b) -> (b, a)) $ codebookStandardProtein
 
 -- | Three-letter PDB code for an unknown type of residue.
 defaultResname   = "UNK"
@@ -113,7 +113,12 @@ fastaRecord' withGaps ident c = ">" ++ header ++ "\n" ++ fastaSeq c
                else ident ++ "|" ++ [chainId c]
     fastaSeq = if withGaps then fastaSequence else fastaGappedSequence
 
+-- | Returns 'String' with ungapped sequence of a given PDB 'Chain'.
 fastaRecord       = fastaRecord' False
+
+-- | Returns 'String' with gapped sequence of a given PDB 'Chain'.
+-- Gaps are placed to assure consistent numbering of residues and
+-- indices in the output 'String'.
 fastaGappedRecord = fastaRecord' True
 
 

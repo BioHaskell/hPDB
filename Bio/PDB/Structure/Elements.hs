@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+-- | Basic properties of chemical 'Element's as suggested by Cambridge Structural Database.
 module Bio.PDB.Structure.Elements(Element(..),
                                   -- Finding element for a given atom
                                   assignElement,
@@ -13,20 +14,16 @@ import System.IO.Unsafe(unsafePerformIO)
 import System.IO(stderr)
 import Bio.PDB.Structure(Atom(..))
 
--- ^ Basic elemental parameters as suggested by CSD.
-
--- | TODO: May be better as a newtype, and make sure that other modules use this declaration
+-- | Type alias for 'Element' names.
 type Element = BS.ByteString
+-- TODO: May be better as a newtype, and make sure that other modules use this declaration
 
 -- | Internal method that reports error to stderr, and return given default value.
 defaulting e defaultValue = unsafePerformIO $ do BS.hPutStrLn stderr $ BS.concat e
                                                  return defaultValue
 
--- | Atomic number of a given element
 {-# INLINE atomicNumber      #-}
-{-# INLINE atomicMass        #-}
-{-# INLINE covalentRadius    #-}
-{-# INLINE vanDerWaalsRadius #-}
+-- | Atomic number of a given element
 atomicNumber :: Element -> Int
 atomicNumber       "C" =   6
 atomicNumber       "N" =   7
@@ -140,6 +137,8 @@ atomicNumber      "ZN" =  30
 atomicNumber      "ZR" =  40
 atomicNumber      x    = defaulting ["Unknown atomic number for element:", BS.pack $ show x] 0
 
+{-# INLINE covalentRadius    #-}
+-- | Covalent radius of an element with a given name.
 covalentRadius    "AC" = 2.15
 covalentRadius    "AG" = 1.45
 covalentRadius    "AL" = 1.21
@@ -253,6 +252,7 @@ covalentRadius    "ZR" = 1.75
 covalentRadius    x    = defaulting ["Unknown covalent radius for element:", BS.pack $ show x] 0.0
 
 
+{-# INLINE atomicMass        #-}
 -- | Atomic mass of a given element in g/mol
 atomicMass :: Element -> Double
 atomicMass         "C" =  12.011
@@ -367,6 +367,7 @@ atomicMass        "ZN" =  65.390
 atomicMass        "ZR" =  91.224
 atomicMass        x    = defaulting ["Unknown atomic mass for element:", BS.pack $ show x] 0.0
 
+{-# INLINE vanDerWaalsRadius #-}
 -- | Van der Waals radius of the given element
 vanDerWaalsRadius :: Element -> Double
 vanDerWaalsRadius  "C" = 1.70
@@ -481,11 +482,16 @@ vanDerWaalsRadius "ZN" = 1.39
 vanDerWaalsRadius "ZR" = 2.00
 vanDerWaalsRadius e    = defaulting ["Do not know van der Waals radius of", BS.pack $ show e] 0.0
 
+{-# INLINE assignElement #-}
+-- | Given a PDB 'Atom' extract or guess its 'Element' name.
 assignElement :: Atom -> Element
 assignElement at = case element at of
                      ""   -> guessElement . atName $ at
                      code -> code
 
+{-# INLINE guessElement #-}
+-- | Guessing an 'Element' name from PDB 'Atom' name. 
+-- Returns empty string, if 'Element' can't be guessed.
 guessElement :: BS.ByteString -> Element
 guessElement "C"   = "C"
 guessElement "C1'" = "C"
