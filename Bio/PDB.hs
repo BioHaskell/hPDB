@@ -13,7 +13,6 @@ module Bio.PDB(parse, write,
 import Bio.PDB.IO(parse, write)
 import Bio.PDB.Structure
 import Bio.PDB.Iterable
-import Bio.PDB.Iterable.Utils
 import Bio.PDB.Fasta
 import Bio.PDB.Structure.List()
 import Bio.PDB.Structure.Vector

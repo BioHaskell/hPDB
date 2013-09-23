@@ -5,7 +5,6 @@ import Prelude hiding(print)
 import Data.ByteString.Char8 as BS
 import Bio.PDB.Structure
 import Bio.PDB.Iterable
-import Bio.PDB.Iterable.Utils
 import Bio.PDB.Structure.List as L
 import Bio.PDB.EventParser.PDBEventPrinter as PR
 import Control.Monad(mapM_)
