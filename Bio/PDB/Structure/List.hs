@@ -5,11 +5,12 @@ module Bio.PDB.Structure.List(List(..), TempList,
                               singleton,
                               map, mapM, foldl, foldl', foldr, foldM, filter, length,
                               defaultSize, residueVectorSize, chainVectorSize,
-                              toList, vimap, (!)
+                              toList, vimap, (!), (++), concat,
+                              init, tail, head
                              ) where
 
 --import Prelude(Int,Num(..),Monad(..))
-import Prelude hiding (length, filter, drop, take, init, tail, mapM, splitAt, map, mapM, foldl, foldr, last)
+import Prelude hiding (length, filter, drop, take, init, tail, mapM, splitAt, map, mapM, foldl, foldr, last, (++), concat, head)
 import qualified Data.Vector.Mutable as M
 import qualified Data.Vector as V
 import Control.Monad(when)
@@ -123,6 +124,21 @@ toList = V.toList
 
 -- | `map` on immutable vectors.
 vimap  = V.imap
+
+-- | Concatenation of a list of immutable vectors.
+concat = V.concat
+
+-- | Remove last element of immutable vectors.
+init   = V.init
+
+-- | First element of immutable vector.
+head   = V.head
+
+-- | Remove first element of immutable vector.
+tail   = V.tail
+
+-- | Concatenation of two immutable
+(++) = (V.++)
 
 -- | Indexing of an immutable vector.
 (!)    = (V.!)

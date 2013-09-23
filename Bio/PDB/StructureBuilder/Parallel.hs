@@ -1,4 +1,4 @@
-{-# LANGUAGE BangPatterns, DisambiguateRecordFields, MultiParamTypeClasses, NamedFieldPuns, FlexibleContexts, OverloadedStrings, RankNTypes, PatternGuards #-}
+{-# LANGUAGE BangPatterns, PatternGuards #-}
 module Bio.PDB.StructureBuilder.Parallel(parseParallel, parseWithNParallel, joinStructure, joinResult)
 where
 
@@ -14,8 +14,6 @@ import qualified Data.ByteString.Char8      as BS
 import qualified Control.Monad.ST           as ST
 import           Control.Monad.State.Strict as State 
 import           Data.STRef                 as STRef
-import qualified Data.Vector                as V
-import qualified Bio.PDB.Structure.List     as L
 
 -- | Parse a fragment of PDB file, returning final line number (within the chunk.)
 partialParse :: FilePath -> String -> (Structure, L.List PDBEvent, Int)
@@ -35,14 +33,14 @@ partialParse fname contents = ST.runST $ do initial <- initializeState
 parseParallel = parseWithNParallel numCapabilities
 -- TODO: merging
 -- | Intermediate result from parsing of PDB chunk.
-type ParseResult = (Structure, V.Vector PDBEvent, Int)
+type ParseResult = (Structure, L.List PDBEvent, Int)
 
 -- | Joins 'ParseResult' from two different chunks and returns a single 'ParseResult'.
 joinResult :: ParseResult -> ParseResult -> ParseResult
 joinResult (struct1, errs1, ln1) (struct2, errs2, ln2) = (resultStruct, resultErrs, ln2)
   where
     resultStruct = struct1 `joinStructure` struct2
-    resultErrs   = errs1 V.++ V.map (updateErrorLine ln1) errs2
+    resultErrs   = errs1 L.++ L.map (updateErrorLine ln1) errs2
 
 -- | Joins 'Structure's resulting from partial parses.
 joinStructure ::  Structure -> Structure -> Structure
@@ -74,21 +72,21 @@ joinResidue = joiner atoms (\r a -> r { atoms = a }) (const ()) (/=) (error "Nev
 --   * and joining function for subordinate objects (if they share the same id.)
 --
 -- This joining function merges two data structures.
-joiner :: (a -> V.Vector a1)-> (a -> V.Vector a1 -> t)-> (a1 -> t1)-> (t1 -> t1 -> Bool)-> (a1 -> a1 -> a1)-> a-> a-> t
+joiner :: (a -> L.List a1)-> (a -> L.List a1 -> t)-> (a1 -> t1)-> (t1 -> t1 -> Bool)-> (a1 -> a1 -> a1)-> a-> a-> t
 joiner getter setter idGetter matcher subjoiner = join
   where
-    s1 `join` s2 | len s1 == 0 || len s2 == 0 = s1 `setter` (getter s1 V.++ getter s2)
+    s1 `join` s2 | len s1 == 0 || len s2 == 0 = s1 `setter` (getter s1 L.++ getter s2)
       where
-        len = V.length . getter
-    s1 `join` s2 | id1 `matcher` id2          = s1 `setter` V.concat [V.init      (getter s1)        ,
-                                                                      V.singleton (m1 `subjoiner` m2),
-                                                                      V.tail      (getter s2)        ]
+        len = L.length . getter
+    s1 `join` s2 | id1 `matcher` id2          = s1 `setter` L.concat [L.init      (getter s1)        ,
+                                                                      L.singleton (m1 `subjoiner` m2),
+                                                                      L.tail      (getter s2)        ]
       where
         id1 = idGetter m1
         id2 = idGetter m2
-        m1       = V.last $ getter s1
-        m2       = V.head $ getter s2
-    s1 `join` s2                              = s1 `setter` (getter s1 V.++ getter s2)
+        m1       = L.last $ getter s1
+        m2       = L.head $ getter s2
+    s1 `join` s2                              = s1 `setter` (getter s1 L.++ getter s2)
 
 -- | Increments line numbers in 'PDBParseError' records by a given value.
 updateErrorLine ::  Int -> PDBEvent -> PDBEvent
