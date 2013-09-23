@@ -1,7 +1,8 @@
 {-# LANGUAGE BangPatterns, DisambiguateRecordFields, MultiParamTypeClasses, NamedFieldPuns, FlexibleContexts, OverloadedStrings, RankNTypes #-}
 {-# LANGUAGE RecordWildCards #-} -- for convenient debugging
 {-# OPTIONS_GHC -fspec-constr-count=2 #-}
-module Bio.PDB.StructureBuilder(parse)
+module Bio.PDB.StructureBuilder
+--(parse)
 
 where
 
@@ -18,21 +19,22 @@ import qualified Bio.PDB.EventParser.PDBEventParser(parsePDBRecords)
 import Bio.PDB.Structure
 import Bio.PDB.Structure.List as L
 
--- NOTE: t is existential 'phantom' type to keep ST effects from escaping
+-- | Shorthand for the State monad in which parsing is done.
+-- `t` is existential 'phantom' type to keep ST effects from escaping
 type ParsingMonad t a = State.StateT (BState t) (ST.ST t) a
 
 -- TODO: with option of online reporting of errors?
 
--- Parses PDB records given as ByteString, given filename fileContents and a monadic
--- action to be executed for each PDB event.
 -- parsePDBRec :: (Monad m) => String -> String -> (() -> PDBEvent -> m ()) -> () -> m ()
+-- | Parses PDB records given as ByteString, given filename fileContents and a monadic
+-- action to be executed for each PDB event.
 parsePDBRec :: String -> String -> (() -> PDBEvent -> ParsingMonad t ()) -> () -> ParsingMonad t ()
 parsePDBRec = Bio.PDB.EventParser.PDBEventParser.parsePDBRecords
 
 -- | Given filename, and contents, parses a whole PDB file, returning a monadic action
 -- | with a tuple of (Structure, [PDBEvent]), where the list of events contains all
 -- | parsing or construction errors.
---parse :: (State.MonadState BState m) => FilePath -> String -> m (Structure, [PDBEvent])
+parse :: FilePath -> String -> (Structure, List PDBEvent)
 parse fname contents = ST.runST $ do initial <- initializeState
                                      (s, e)  <- State.evalStateT parsing initial
                                      return (s :: Structure, e :: L.List PDBEvent)
@@ -53,7 +55,7 @@ data BState s = BState { currentResidue    :: Maybe Residue,
                          modelContents     :: L.TempList  s Chain,
                          structureContents :: L.TempList  s Model,
                          errors            :: L.TempList  s PDBEvent,
-                         lineNo           :: STRef.STRef s Int
+                         lineNo            :: STRef.STRef s Int
                        }
 
 -- | Initial state of the structure record builder.
@@ -73,7 +75,7 @@ initializeState = do r  <- L.initialNew L.residueVectorSize
                                      modelContents     = m,
                                      structureContents = s,
                                      errors            = e,
-                                     lineNo           = l }
+                                     lineNo            = l }
 -- | Checks that a residue with a given identification tuple is current,
 -- | or if not, then closes previous residue (if present),
 -- | and marks a new ,,current'' residue in a state of builder.
@@ -87,11 +89,11 @@ checkResidue (RESID (newName, newChain, newResseq, newInsCode)) =
   where
     residueChanged Nothing = True
     residueChanged (Just (Residue { resName = oldResName,
-                                    resSeq  = oldResSeq,
+                                    resSeq  = oldResSeq ,
                                     insCode = oldInsCode,
-                                    atoms   = _atoms })) =
+                                    atoms   = _atoms    })) =
       (oldResName, oldResSeq, oldInsCode) /= (newName, newResseq, newInsCode)
-    createResidue l st = st { currentResidue = Just newResidue,
+    createResidue l st = st { currentResidue  = Just newResidue,
                               residueContents = l }
     newResidue = Bio.PDB.Structure.Residue { resName = newName,
                                              resSeq  = newResseq,
@@ -110,20 +112,23 @@ checkChain name = do checkModel
   where
     chainChanged Nothing                               = True
     chainChanged (Just (Chain { chainId = oldChain })) = oldChain /= name
-    createChain l state = state { currentChain = Just Chain { chainId  = name,
-                                                              residues = L.empty },
+    createChain l state = state { currentChain  = Just Chain { chainId  = name,
+                                                               residues = L.empty },
                                   chainContents = l }
 
 
 -- | Checks that a current model has been declared, and creates zeroth model,
 -- | if no such model exists.
--- TODO: when createing a dummy model, check that there are no models declared before
---       [Otherwise one needs to report an error!]
 checkModel :: ParsingMonad t ()
 checkModel = do curModel <- State.gets currentModel
-                when (isNothing curModel) $ openModel 1
+                when (isNothing curModel) $ openModel defaultModelId
 -- | Closes construction of a current residue and appends this residue to a current chain. (Monadic action.)
 --closeResidue :: State.State BState ()
+-- TODO: when createing a dummy model, check that there are no models declared before
+--       [Otherwise one needs to report an error!]
+
+-- | Default model id, in case none was indicated (for comparison.)
+defaultModelId = 1
 
 closeResidue :: ParsingMonad t ()
 closeResidue = do r <- State.gets currentResidue
@@ -146,7 +151,7 @@ closeChain = do closeResidue
                 when (isJust c) $ do l   <- State.gets chainContents
                                      l'  <- L.finalize l
                                      let Just ch = c
-                                         ch' = ch { Bio.PDB.Structure.residues = l' }
+                                         ch'     = ch { Bio.PDB.Structure.residues = l' }
                                      m   <- State.gets currentModel
                                      when (isNothing m) $ do mli <- State.gets structureContents
                                                              i <- L.tempLength mli
