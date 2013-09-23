@@ -1,4 +1,5 @@
 {-# LANGUAGE NoMonomorphismRestriction, BangPatterns #-}
+-- | This module wraps 3D vector operations, and adds missing ones.
 module Bio.PDB.Structure.Vector(Vector3(..),
                                 unpackVector3,
                                 vnormalise, vdot, (*|), (|*),
@@ -9,8 +10,6 @@ import qualified Data.Vector.Class as C
 import Data.Vector.V3
 import Data.List(foldl')
 import Test.QuickCheck
-
--- ^ This module wraps 3D vector operations, and adds missing ones.
 
 -- | Unpacks an abstract 3D vector into a triple of 'Double's.
 unpackVector3 :: Vector3 -> (Double, Double, Double)
