@@ -1,8 +1,5 @@
-{-# LANGUAGE ScopedTypeVariables  #-}
-{-# LANGUAGE NoMonomorphismRestriction #-}
-{-# LANGUAGE OverloadedStrings  #-}
-
--- Parsing of records that contain simple list of values: KEYWDS, AUTHOR, MDLTYP, EXPDTA.
+{-# LANGUAGE ScopedTypeVariables, NoMonomorphismRestriction, OverloadedStrings  #-}
+-- | Parsing of records that contain simple list of values: KEYWDS, AUTHOR, MDLTYP, EXPDTA.
 module Bio.PDB.EventParser.ParseListRecord(parseKEYWDS,parseAUTHOR,parseMDLTYP,parseEXPDTA)
 where
 
