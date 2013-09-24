@@ -64,7 +64,7 @@ source-repository head
 
 Library
   ghc-options:      -fspec-constr-count=4 -O3 
-  build-depends:    base>=4.0, base <4.7, ghc-prim, directory, mtl, template-haskell, vector, AC-Vector, containers, deepseq, QuickCheck >= 2.5.0.0, text>=0.11.1.13, iterable >= 2.0, parallel
+  build-depends:    base>=4.0, base <4.7, ghc-prim, directory, mtl, template-haskell, vector, AC-Vector, containers, deepseq, QuickCheck >= 2.5.0.0, text>=0.11.1.13, iterable >= 2.0, parallel >= 3.0.0.0
   if flag(have-mmap)
     build-depends: mmap
     cpp-options: -DHAVE_MMAP
