@@ -86,11 +86,11 @@ res2code r = resname2fastacode . resName $ r
 
 -- | Converts an `Iterable` yielding `Residue`s into a list of aminoacid one-character codes.
 fastaSequence :: (Iterable a Residue) => a -> [Char]
-fastaSequence = Iter.ifoldr (\a b -> res2code a : b) []
+fastaSequence = Iter.itfoldr (\a b -> res2code a : b) []
 
 -- | Converts an `Iterable` yielding `Residue`s into a list of aminoacid one-character codes.
 fastaGappedSequence :: (Iterable a Residue) => a -> [Char]
-fastaGappedSequence = concat . scan2 insertGaps projectAA . Iter.ifoldr (\a b -> (resSeq a, res2code a) : b) []
+fastaGappedSequence = concat . scan2 insertGaps projectAA . Iter.itfoldr (\a b -> (resSeq a, res2code a) : b) []
   where
     projectAA  (i, aa)         = [aa]
     insertGaps (i, _ ) (j, aa) = ['-' | _ <- [2..j-i]] ++ [aa]

@@ -19,18 +19,18 @@ write handle structure = mapM_ (PR.print handle) (structureEvents structure)
                             
 -- | Generates list of `PDBEvent`s from a given Structure.
 structureEvents :: Structure -> [PDBEvent]
-structureEvents s = ifoldr modelEvents [END] s
+structureEvents s = itfoldr modelEvents [END] s
 
 -- | Generates list of `PDBEvent`s from a given Model.
 modelEvents :: Model -> PDBEventS
 modelEvents m cont = start:main (ENDMDL : cont)
   where
     start   = MODEL $ modelId m
-    main  c = ifoldr chainEvents c m
+    main  c = itfoldr chainEvents c m
 
 -- | Generates list of `PDBEvent`s from a given Chain.
 chainEvents :: Chain -> PDBEventS
-chainEvents ch c = ifoldr (residueEvents ch) (ter:c) ch
+chainEvents ch c = itfoldr (residueEvents ch) (ter:c) ch
   where
     ter = TER { num     = atSer + 1      , -- FIXME: should be lastAtom ch + 1
                 resname = lastResName    ,
@@ -46,7 +46,7 @@ chainEvents ch c = ifoldr (residueEvents ch) (ter:c) ch
 
 -- | Generates list of `PDBEvent`s from a given Residue and its Chain.
 residueEvents :: Chain -> Residue -> PDBEventS
-residueEvents ch r c = ifoldr (atomEvents ch r) c r
+residueEvents ch r c = itfoldr (atomEvents ch r) c r
 
 -- | Generates list of `PDBEvent`s from a given Atom, its Residue, and its Chain.
 atomEvents :: Chain -> Residue -> Atom -> PDBEventS
