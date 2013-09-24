@@ -34,10 +34,10 @@ parsePDBRec = Bio.PDB.EventParser.PDBEventParser.parsePDBRecords
 -- | Given filename, and contents, parses a whole PDB file, returning a monadic action
 -- | with a tuple of (Structure, [PDBEvent]), where the list of events contains all
 -- | parsing or construction errors.
-parse :: FilePath -> String -> (Structure, List PDBEvent)
-parse fname contents = ST.runST $ do initial <- initializeState
-                                     (s, e)  <- State.evalStateT parsing initial
-                                     return (s :: Structure, e :: L.List PDBEvent)
+parseSerial :: FilePath -> String -> (Structure, List PDBEvent)
+parseSerial fname contents = ST.runST $ do initial <- initializeState
+                                           (s, e)  <- State.evalStateT parsing initial
+                                           return (s :: Structure, e :: L.List PDBEvent)
   where parsing = do parsePDBRec (BS.pack fname) contents (\() !ev -> parseStep ev) ()
                      closeStructure
                      s  <- State.gets currentStructure
