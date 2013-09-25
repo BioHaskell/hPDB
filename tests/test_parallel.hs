@@ -4,7 +4,6 @@ module Main(main) where
 
 import           Prelude hiding(readFile)
 import           Bio.PDB.StructureBuilder.Parallel
-import           Bio.PDB.StructureBuilder(defaultModelId)
 import           Bio.PDB.Iterable
 import           Bio.PDB.IO
 import           Bio.PDB.Iterable.Utils
@@ -22,6 +21,6 @@ import           Bio.PDB.Structure
 main = do fnames <- getArgs
           forM_ fnames $ \fname -> do contents <- readFile fname
                                       putStr $ "Parsing with " ++ show numCapabilities ++ " capabilities."
-                                      let (struct, errs) = parseParallel' fname contents
+                                      let (struct, errs) = parseParallel fname contents
                                       print $ numAtoms struct
 
