@@ -50,8 +50,8 @@ getCodec fname c | (".gz" `BS.isSuffixOf` BS.pack fname) ||
 getCodec fname c                                         = id
 
 gzipParams c = GZip.DecompressParams GZip.defaultWindowBits (fromIntegral (BS.length c * 5))
-#ifndef OLD_ZLIB
-               Nothing
+#if MIN_VERSION_zlib(0,5,4)
+                                     Nothing
 #endif
   -- Upper bound: compression rate never exceeded 4.7 for big test files.
 

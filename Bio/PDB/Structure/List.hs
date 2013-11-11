@@ -33,7 +33,8 @@ empty = V.empty
 -- | Vector with a single element
 singleton= V.singleton
 
-#ifdef DEFINE_NFDATA_VECTOR
+#if MIN_VERSION_vector(0, 10, 0)
+#else
 -- It is defined in newer versions of vector package.
 instance NFData (V.Vector a)   where
 #endif
