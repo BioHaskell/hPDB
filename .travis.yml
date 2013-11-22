@@ -2,15 +2,15 @@ language: haskell
 
 matrix:
   allow_failures:
-    - env: GHCVER=7.0.4
-    - env: GHCVER=7.2.2
+    - env: GHCVER=7.0.4 THVER=2.6
+    - env: GHCVER=7.2.2 THVER=2.6
     - env: GHCVER=head
 
 env:
- - GHCVER=7.0.4
- - GHCVER=7.2.2
- - GHCVER=7.4.2
- - GHCVER=7.6.3
+ - GHCVER=7.0.4 THVER=2.6
+ - GHCVER=7.2.2 THVER=2.6
+ - GHCVER=7.4.2 THVER=2.8
+ - GHCVER=7.6.3 THVER=2.8
  - GHCVER=head
 
 before_install:
@@ -21,7 +21,7 @@ before_install:
 
 install:
  - cabal-1.18 update
- - travis_retry cabal-1.18 install
+ - travis_retry cabal-1.18 install template-haskell-$THVER
  - travis_retry cabal-1.18 install --only-dependencies
  - cabal-1.18 install --enable-tests
 
