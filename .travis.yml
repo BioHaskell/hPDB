@@ -19,7 +19,7 @@ before_install:
  - travis_retry sudo apt-get update
  - travis_retry sudo apt-get install cabal-install-1.18 ghc-$GHCVER
  - export PATH=/opt/ghc/$GHCVER/bin:$PATH
- - travis_retry cabal-1.18 update
+# - travis_retry cabal-1.18 update # commenting out shortens testing time
 # - travis_retry cabal-1.18 install template-haskell${THVER} QuickCheck${QCVER}
 
 install:
