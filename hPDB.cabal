@@ -1,8 +1,8 @@
 name:                hPDB
-version:             0.9999.1
+version:             1.0
 synopsis:            Protein Databank file format library
 homepage:            https://github.com/mgajda/hpdb
-stability:           beta
+stability:           stable
 package-url:         http://hackage.haskell.org/package/hPDB
 description:         Protein Data Bank file format is a most popular format for holding biomolecule data.
                      .
