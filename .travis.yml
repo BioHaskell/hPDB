@@ -1,15 +1,15 @@
 language: haskell
 
-matrix:
-  allow_failures:
-    - env: GHCVER=head
+#matrix:
+#  allow_failures:
+#    - env: GHCVER=head
 #    - env: GHCVER=7.0.4 THVER=-2.6.0.0 QCVER=-2.5.*
 #    - env: GHCVER=7.2.2 THVER=-2.6.0.0 QCVER=-2.5.*
 #    - env: GHCVER=7.4.2 THVER=-2.6.0.0 QCVER=-2.5.*
 
 env:
  - GHCVER=7.6.3
- - GHCVER=head
+# - GHCVER=head
 # - GHCVER=7.0.4 THVER=-2.6.0.0 QCVER=-2.5.*
 # - GHCVER=7.2.2 THVER=-2.6.0.0 QCVER=-2.5.*
 # - GHCVER=7.4.2
