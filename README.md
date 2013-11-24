@@ -2,7 +2,7 @@ hPDB
 ====
 Haskell PDB file format parser.
 
-[![Build Status](https://api.travis-ci.org/mgajda/hPDB.png?branch=master)](https://travis-ci.org/mgajda/hPDB)
+[![Build Status](https://api.travis-ci.org/BioHaskell/hPDB.png?branch=master)](https://travis-ci.org/BioHaskell/hPDB)
 
 Protein Data Bank file format is a most popular format for holding biomolecule data.
 
