@@ -1,7 +1,7 @@
 name:                hPDB
 version:             1.1
 synopsis:            Protein Databank file format library
-homepage:            https://github.com/mgajda/hpdb
+homepage:            https://github.com/BioHaskell/hPDB
 stability:           stable
 package-url:         http://hackage.haskell.org/package/hPDB
 description:         Protein Data Bank file format is a most popular format for holding biological macromolecular data.
@@ -19,7 +19,7 @@ description:         Protein Data Bank file format is a most popular format for 
                      It is aimed to not only deliver event-based interface, but also a high-level data
                      structure for manipulating data in spirit of BioPython's PDB parser. 
                      .
-                     <dx.doi.org/10.1186/1756-0500-6-483 hPDB - Haskell library for processing atomic biomolecular structures in Protein Data Bank format - Michal Jan Gajda. BMC Research Notes 2013, 6:483.>
+                     <http://dx.doi.org/10.1186/1756-0500-6-483 hPDB - Haskell library for processing atomic biomolecular structures in Protein Data Bank format - Michal Jan Gajda. BMC Research Notes 2013, 6:483.>
 
 category:            Bioinformatics 
 license:             BSD3
@@ -37,7 +37,7 @@ extra-source-files:  README.md INSTALL AUTHORS
 
 source-repository head
   type:     git
-  location: https://github.com/mgajda/hPDB
+  location: https://github.com/BioHaskell/hPDB
 
 flag have-mmap
   description: Use mmap to read input faster.
