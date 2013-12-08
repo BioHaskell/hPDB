@@ -6,7 +6,9 @@ module Bio.PDB.Structure.Elements(Element(..),
                                   -- Guessing element name from atom name (for standard residues only.)
                                   guessElement,
                                   -- properties of elements
-                                  atomicNumber, atomicMass, covalentRadius, vanDerWaalsRadius) where
+                                  atomicNumber, atomicMass,
+                                  covalentRadius,    maxCovalentRadius,
+                                  vanDerWaalsRadius, maxVanDerWaalsRadius) where
 
 import Prelude hiding (error, String)
 import Data.ByteString.Char8 as BS
@@ -251,6 +253,7 @@ covalentRadius    "ZN" = 1.22
 covalentRadius    "ZR" = 1.75
 covalentRadius    x    = defaulting ["Unknown covalent radius for element:", BS.pack $ show x] 0.0
 
+maxCovalentRadius = covalentRadius "FR"
 
 {-# INLINE atomicMass        #-}
 -- | Atomic mass of a given element in g/mol
@@ -481,6 +484,8 @@ vanDerWaalsRadius "YB" = 2.00
 vanDerWaalsRadius "ZN" = 1.39
 vanDerWaalsRadius "ZR" = 2.00
 vanDerWaalsRadius e    = defaulting ["Do not know van der Waals radius of", BS.pack $ show e] 0.0
+
+maxVanDerWaalsRadius = vanDerWaalsRadius "K"
 
 {-# INLINE assignElement #-}
 -- | Given a PDB 'Atom' extract or guess its 'Element' name.
