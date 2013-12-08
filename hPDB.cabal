@@ -4,11 +4,23 @@ synopsis:            Protein Databank file format library
 homepage:            https://github.com/mgajda/hpdb
 stability:           stable
 package-url:         http://hackage.haskell.org/package/hPDB
-description:         Protein Data Bank file format is a most popular format for holding biomolecule data.
+description:         Protein Data Bank file format is a most popular format for holding biological macromolecular data.
                      .
-                     This is a very fast parser: below 7s for the largest entry in PDB - 1HTQ which is over 70MB - as compared with 11s of RASMOL 2.7.5, or 2m15s of BioPython with Python 2.6 interpreter.
+                     This is a very fast sequential parser:
                      .
-                     It is aimed to not only deliver event-based interface, but also a high-level data structure for manipulating data in spirit of BioPython's PDB parser. 
+                       * below 7s for the largest entry in PDB - 1HTQ which is over 70MB - as compared with 
+                     .
+                       * 11s of RASMOL 2.7.5,
+                     .
+                       * or 2m15s of BioPython with Python 2.6 interpreter.
+                     .
+                     In its parallel incarnation it is most probably the fastest parser for PDB format.
+                     .
+                     It is aimed to not only deliver event-based interface, but also a high-level data
+                     structure for manipulating data in spirit of BioPython's PDB parser. 
+                     .
+                     <dx.doi.org/10.1186/1756-0500-6-483 hPDB - Haskell library for processing atomic biomolecular structures in Protein Data Bank format - Michal Jan Gajda. BMC Research Notes 2013, 6:483.>
+
 category:            Bioinformatics 
 license:             BSD3
 license-file:        LICENSE
