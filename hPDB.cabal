@@ -32,7 +32,7 @@ bug-reports:         mailto:mjgajda@googlemail.com
 
 build-type:          Simple
 cabal-version:       >=1.8
-tested-with:         GHC==7.0.3, GHC==7.2.2, GHC==7.4.1, GHC==7.4.2, GHC==7.6.1, GHC==7.6.2
+tested-with:         GHC==7.0.3, GHC==7.2.2, GHC==7.4.1, GHC==7.4.2, GHC==7.6.1, GHC==7.6.2, GHC==7.6.3
 extra-source-files:  README.md INSTALL AUTHORS
 
 source-repository head
@@ -54,26 +54,6 @@ flag have-text-format
                .
                http://ghc.haskell.org/trac/ghc/ticket/5289
   default: True
-
--- TODO: Remove these old flags...
-flag old-bytestring
-  description: Use bytestring before version 0.10 (introduced in GHC 7.6), and define NFData for Data.ByteString yourself.
-               Disable for GHC 7.6.
-  default: False
-
-flag old-zlib
-  description: Use zlib before version 0.5.4 (introduced in GHC 7.6).
-               Disable for GHC 7.6.1
-  default: False
-
-flag old-vector
-  description: Use old vector library before version 0.10 (introduced along with GHC 7.6).
-               Disable for GHC 7.6.1 and latest 7.4.2.
-  default: False
-
-source-repository head
-  type:     git
-  location: git://github.com:mgajda/hpdb.git
 
 Library
   ghc-options:      -fspec-constr-count=4 -O3 
