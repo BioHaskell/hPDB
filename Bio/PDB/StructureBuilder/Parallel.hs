@@ -8,6 +8,7 @@ import           Bio.PDB.Structure
 import           Bio.PDB.EventParser.PDBEvents(PDBEvent(PDBParseError))
 import           GHC.Conc(numCapabilities)
 import           Control.Parallel.Strategies
+import           Bio.PDB.Util.ParFold(parFold1)
 import           Control.Arrow((&&&))
 import qualified Bio.PDB.Structure.List     as L
 import qualified Data.ByteString.Char8      as BS
@@ -101,7 +102,8 @@ parseWithNParallel sparks fname input = (struct, errs)
     chunks = chunkString chunkLen input
     pList = map (partialParse fname) chunks
     partialResults  = pList `using` parList (evalTuple3 rdeepseq r0 r0)
-    (struct, errs, ln)  = foldl joinResult (head partialResults) (tail partialResults)
+    (struct, errs, ln)  = parFold1 joinResult partialResults
+    --(struct, errs, ln)  = foldl joinResult (head partialResults) (tail partialResults)
 -- TODO: correct line numbers! partial parse should return Structure + line number
 
 -- | Splits a ByteString into chunks of given size, and ending at end of line.
