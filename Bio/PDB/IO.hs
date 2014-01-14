@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings  #-}
 -- | Simple input/output wrappers taking filenames, and handling compression.
-module Bio.PDB.IO(parse, write) where
+module Bio.PDB.IO(parse, write, PDBWritable()) where
 
 import qualified Control.Exception(catch)
 import Control.Exception.Base(SomeException)
@@ -9,6 +9,7 @@ import Prelude hiding(String,writeFile)
 import Bio.PDB.EventParser.PDBParsingAbstractions
 import Bio.PDB.Structure.List as L
 import qualified Bio.PDB.StructurePrinter as PDBSP
+import           Bio.PDB.StructurePrinter(PDBWritable())
 import Control.Monad(when)
 
 import Bio.PDB.EventParser.PDBEvents(PDBEvent(PDBParseError, PDBIgnoredLine))

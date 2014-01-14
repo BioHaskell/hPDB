@@ -1,6 +1,8 @@
 {-# LANGUAGE NoMonomorphismRestriction, FlexibleContexts #-}
 -- | Searching for neighbouring atoms in a 3D space using `Octree`.
-module Bio.PDB.Structure.Neighbours(makeOctree, findInRadius, findNearest)
+module Bio.PDB.Structure.Neighbours(makeOctree,
+                                    findInRadius, findNearest,
+                                    AtomOctree(..))
 where
 
 import qualified Data.Octree                as Oct
