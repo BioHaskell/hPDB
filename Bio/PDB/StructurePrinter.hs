@@ -1,22 +1,66 @@
-{-# LANGUAGE NamedFieldPuns, DisambiguateRecordFields #-}
+{-# LANGUAGE NamedFieldPuns, DisambiguateRecordFields, OverloadedStrings #-}
 -- | High-level output routines for 'Structure'.
-module Bio.PDB.StructurePrinter(write) where
+module Bio.PDB.StructurePrinter(write, PDBWritable()) where
 
 import Prelude hiding(print)
+import Control.Monad(mapM_)
+import System.IO(Handle)
 import Data.ByteString.Char8 as BS
+
 import Bio.PDB.Structure
 import Bio.PDB.Iterable
 import Bio.PDB.Structure.List as L
 import Bio.PDB.EventParser.PDBEventPrinter as PR
-import Control.Monad(mapM_)
 import Bio.PDB.EventParser.PDBEvents 
 
 -- | ShowS like type for a list of `PDBEvent`s.
 type PDBEventS = [PDBEvent] -> [PDBEvent]
 
--- | Writes a structure in a PDB format to a filehandle.
-write handle structure = mapM_ (PR.print handle) (structureEvents structure)
-                            
+-- * Class-based interface for generating PDB events from structure fragments.
+-- | Writes a structure or its part in a PDB format to a filehandle.
+write :: PDBWritable a => Handle -> a -> IO ()
+write handle structure = mapM_ (PR.print handle) (pdbEvents structure)
+
+-- | Class generating events for PDB structure fragments.
+class PDBWritable a where
+    pdbEvents :: a -> [PDBEvent]
+    pdbEvents = flip pdbEventS []
+    pdbEventS :: a -> PDBEventS
+
+instance PDBWritable Structure
+  where
+    pdbEvents = structureEvents
+    pdbEventS = error "Structure is closed by definition cannot have continuation!"
+
+instance PDBWritable Model
+  where
+    pdbEventS = modelEvents
+
+instance PDBWritable Chain
+  where
+    pdbEventS = chainEvents
+
+instance PDBWritable Residue
+  where
+    pdbEventS = residueEvents blankChain
+
+instance PDBWritable Atom
+  where
+    pdbEventS = atomEvents blankChain blankResidue
+
+-- | Helper: blank chain in case we don't know which chain residue belongs to.
+blankChain   :: Chain
+blankChain   = Chain { chainId  = ' '
+                     , residues = L.empty }
+
+-- | Helper blank residue in case we don't know which residue the atom belongs to.
+blankResidue :: Residue
+blankResidue = Residue { resName = "UNK"
+                       , resSeq  = 0
+                       , insCode = ' '
+                       , atoms   = L.empty }
+
+-- * Routines for writing event list for fragments of the structure.
 -- | Generates list of `PDBEvent`s from a given Structure.
 structureEvents :: Structure -> [PDBEvent]
 structureEvents s = itfoldr modelEvents [END] s
@@ -79,3 +123,4 @@ atomEvents   (Chain { chainId = chid }
                                  charge    = ch,
                                  hetatm    = isHet
                                } : c
+
