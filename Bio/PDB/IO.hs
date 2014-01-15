@@ -52,6 +52,6 @@ showError filename (PDBIgnoredLine line)              =
   printError [BS.pack filename, ": IGNORED ", line]
 
 -- | Write structure to a .pdb file.
-write :: Bio.PDB.Structure.Structure -> FilePath -> IO ()
+write :: PDBWritable a => a -> FilePath -> IO ()
 write structure fname = writeFile fname $ \h -> PDBSP.write h structure
 

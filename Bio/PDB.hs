@@ -1,4 +1,4 @@
-module Bio.PDB(parse, write,
+module Bio.PDB(parse, write, PDBWritable,
                Structure(..), Model(..), Chain(..), Residue(..), Atom(..),
                Iterable(..),
                numAtoms, numResidues, numChains, numModels,
@@ -10,7 +10,7 @@ module Bio.PDB(parse, write,
                atomicNumber, atomicMass, covalentRadius, vanDerWaalsRadius
               ) where
 
-import Bio.PDB.IO(parse, write)
+import Bio.PDB.IO(parse, write, PDBWritable)
 import Bio.PDB.Structure
 import Bio.PDB.Iterable
 import Bio.PDB.Fasta
