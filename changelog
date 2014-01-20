@@ -1,0 +1,19 @@
+-*-Changelog-*-
+
+1.1.1  Jan 2014
+	* Exposed PDBWritable class for all objects that can be written to PDB
+	file.
+
+1.1	Jan 2014
+	* Octree building with Bio.PDB.Structure.Neighbours.
+
+0.9999.1 Sep 2013
+	* Removed most compilation options and replaced them with conditionals
+	on library versions.
+
+0.9999  Sep 2013
+	* Parallel parsing.
+	* Change of Iterable interface from imap -> itmap etc.
+
+0.99   Sep 2013
+	* First public release.
