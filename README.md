@@ -3,6 +3,7 @@ hPDB
 Haskell PDB file format parser.
 
 [![Build Status](https://api.travis-ci.org/BioHaskell/hPDB.png?branch=master)](https://travis-ci.org/BioHaskell/hPDB)
+[![Hackage](https://budueba.com/hackage/hPDB)](https://hackage.haskell.org/package/hPDB)
 
 
 Protein Data Bank file format is a most popular format for holding biomolecule data.
@@ -15,7 +16,6 @@ This is a very fast parser:
 
 It is aimed to not only deliver event-based interface, but also a high-level data structure for manipulating data in spirit of BioPython's PDB parser. 
 
-Details on official releases are on 
-[![Hackage](https://budueba.com/hackage/hPDB)](https://hackage.haskell.org/package/hPDB)
+Details on official releases are on [Hackage](https://hackage.haskell.org/package/hPDB)
 
 This package is also a part of [Stackage](http://daniel-diaz.github.io/stackagelist/) - a stable subset of Hackage.
