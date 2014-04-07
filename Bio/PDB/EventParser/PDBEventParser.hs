@@ -1,4 +1,5 @@
 {-# LANGUAGE ScopedTypeVariables, OverloadedStrings, BangPatterns, NoMonomorphismRestriction #-}
+{-# OPTIONS_GHC -fno-spec-constr #-} -- workaround for GHC 7.8.0 bug #8960
 -- | Low-level event-based parser interface.
 module Bio.PDB.EventParser.PDBEventParser(parsePDBRecords)
 where
