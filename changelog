@@ -1,5 +1,9 @@
 -*-Changelog-*-
 
+1.1.2  Apr 2014
+	* Workaround GHC 7.8 SpecConstr bug: #8960. SpecConstr disabled in
+	Bio.PDB.EventParser.PDBEventParser.
+
 1.1.1  Jan 2014
 	* Exposed PDBWritable class for all objects that can be written to PDB
 	file.
