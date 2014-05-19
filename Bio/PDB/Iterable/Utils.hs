@@ -7,6 +7,7 @@ module Bio.PDB.Iterable.Utils(firstModel,
                               numModels)
 where
 
+import Data.Proxy(Proxy)
 import Bio.PDB.Structure
 import Bio.PDB.Iterable.Instances
 
@@ -18,17 +19,17 @@ firstModel = itfoldr (\m _ -> Just m) Nothing
 
 -- | Number of all atoms within the structure.
 numAtoms :: Iterable a Atom => a -> Int
-numAtoms = itlength (undefined :: Atom)
+numAtoms = itlength (undefined :: Proxy Atom)
 
 -- | Number of all residues within the structure.
 numResidues :: Iterable a Residue => a -> Int
-numResidues = itlength (undefined :: Residue)
+numResidues = itlength (undefined :: Proxy Residue)
 
 -- | Number of all chains within the structure.
 numChains :: Iterable a Chain => a -> Int
-numChains = itlength (undefined :: Chain)
+numChains = itlength (undefined :: Proxy Chain)
 
 -- | Number of all models within the structure.
 numModels :: Iterable a Model => a -> Int
-numModels = itlength (undefined :: Model)
+numModels = itlength (undefined :: Proxy Model)
 
