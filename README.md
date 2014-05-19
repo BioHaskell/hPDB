@@ -2,7 +2,7 @@ hPDB
 ====
 Haskell PDB file format parser.
 
-[![Build Status](https://api.travis-ci.org/BioHaskell/hPDB.png?branch=master)](https://travis-ci.org/BioHaskell/hPDB)
+[![Build Status](https://api.travis-ci.org/BioHaskell/hPDB.svg?branch=master)](https://travis-ci.org/BioHaskell/hPDB)
 [![Hackage](https://budueba.com/hackage/hPDB)](https://hackage.haskell.org/package/hPDB)
 
 
