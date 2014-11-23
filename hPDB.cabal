@@ -53,7 +53,7 @@ flag have-text-format
                due to GHC bug #5289:
                .
                http://ghc.haskell.org/trac/ghc/ticket/5289
-  default: True
+  default: False
 
 Library
   ghc-options:      -fspec-constr-count=4 -O3 
