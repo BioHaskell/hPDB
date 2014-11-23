@@ -19,3 +19,25 @@ It is aimed to not only deliver event-based interface, but also a high-level dat
 Details on official releases are on [Hackage](https://hackage.haskell.org/package/hPDB)
 
 This package is also a part of [Stackage](http://daniel-diaz.github.io/stackagelist/) - a stable subset of Hackage.
+
+Projects for the future:
+------------------------
+
+Please let me know if you would be willing to push the project further.
+
+In particular one may considering these features:
+
+* Migrate out of `text-format`, since it gives portability trouble, and slows things down when printing.
+* Migrate from `AC-Vector` to `vector-space`.
+* Use `lens` to facilitate access to the data structures.
+* Add Octree to the default data structure (with automatic update.)
+* Lenses for torsion angles within protein/RNA chain.
+* Write a combinator library for generic fast parsing.
+* Checking whether GHC 7.8 improved efficiency of fixed point arithmetic,
+since PDB coordinates have dynamic range of just ~2^20 bits, with smallest
+step of 0.001.
+* Implement basic spatial operations of RMS superposition (with SVD),
+affine transform on a substructure.
+* Class-based wrappers showing Structure-Model-Chain-Residue-Atom interface
+with possible wrapping of Repa/Accelerate arrays for fast computation.
+
