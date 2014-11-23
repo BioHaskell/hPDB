@@ -33,11 +33,11 @@ empty = V.empty
 -- | Vector with a single element
 singleton= V.singleton
 
--- #if MIN_VERSION_vector(0, 10, 0)
--- #else
+#if MIN_VERSION_vector(0, 10, 0)
+#else
 -- It is defined in newer versions of vector package.
--- instance NFData (V.Vector a)   where
--- #endif
+instance NFData (V.Vector a)   where
+#endif
 
 instance NFData (TempList m a) where
   rnf t@(TempList i v) = i `seq` v `seq` ()
