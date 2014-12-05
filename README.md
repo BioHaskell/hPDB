@@ -28,10 +28,12 @@ Please let me know if you would be willing to push the project further.
 In particular one may considering these features:
 
 * Migrate out of `text-format`, since it gives portability trouble, and slows things down when printing.
-* Migrate from `AC-Vector` to `vector-space`.
+* Migrate from `AC-Vector` to another vector library:
+    - `vector-space`
+    - or `linear`
 * Use `lens` to facilitate access to the data structures.
+    - torsion angles within protein/RNA chain.
 * Add Octree to the default data structure (with automatic update.)
-* Lenses for torsion angles within protein/RNA chain.
 * Write a combinator library for generic fast parsing.
 * Checking whether GHC 7.8 improved efficiency of fixed point arithmetic,
 since PDB coordinates have dynamic range of just ~2^20 bits, with smallest
