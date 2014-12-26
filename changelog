@@ -1,5 +1,8 @@
 -*-Changelog-*-
 
+1.2.0.1  Dec 2014
+	* Relaxed upper bounds
+
 1.2.0  May 2014
 	* Iterable 3.0
 
