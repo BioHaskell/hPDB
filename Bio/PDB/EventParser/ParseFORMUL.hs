@@ -49,21 +49,21 @@ parseFORMUL line line_no = return $ if null errs
                                    else errs
   where
     -- parse
-    errs            = fErrs ++ watErr
-    (fields, fErrs) = parseFields formulFields line line_no
+    errs                = fErrs ++ watErr
+    (fields, fErrs)     = parseFields formulFields line line_no
     [fRec, _, fCompNum, _, fHetId, _, fCont, fAsterisk, fFormula] = fields
-    IFInt  compNum  = fCompNum
-    IFStr  hetId    = fHetId
-    IFInt  cont     = fCont
-    IFChar asterisk = fAsterisk
-    IFStr  formula  = fFormula
+    IFInt  compNum      = fCompNum
+    IFStr  hetId        = fHetId
+    IFInt  cont         = fCont
+    IFChar asteriskChar = fAsterisk
+    IFStr  formula      = fFormula
     
-    watErr = if asterisk `elem` " *"
+    watErr = if (==asteriskChar) `BS.any` " *"
                then []
                else [PDBParseError line_no 19 $
                      BS.concat ["Expecting asterisk for water or space, but found: '",
-                                BS.pack [asterisk], "'."]]
-    isWater = asterisk == '*'
+                                BS.pack [asteriskChar], "'."]]
+    isWater = asteriskChar == '*'
 
     -- unpack fields
     result = FORMUL compNum hetId cont isWater [formula]
