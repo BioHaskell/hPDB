@@ -3,12 +3,12 @@ language: haskell
 matrix:
   allow_failures:
     - env: GHCVER=head
-    - env: GHCVER=7.10.0
+    - env: GHCVER=7.10.1
 
 env:
  - GHCVER=7.6.3
  - GHCVER=7.8.3
- - GHCVER=7.10.0
+ - GHCVER=7.10.1
  - GHCVER=head
 
 before_install:
