@@ -78,3 +78,4 @@ data Atom      = Atom      { atName    :: !String,
 
 -- constructor is strict in all arguments...
 instance NFData Atom where
+  rnf (Atom {}) = ()

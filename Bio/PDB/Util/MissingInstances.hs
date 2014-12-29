@@ -13,5 +13,6 @@ import Control.DeepSeq
 -- I use strict version of BS.ByteString so default implementation should do
 -- | Nothing needs to be done in NFData instance for stricty `BS.ByteString`.
 instance NFData BS.ByteString where
+  rnf a = a `seq` ()
 #endif
 

@@ -37,6 +37,7 @@ singleton= V.singleton
 #else
 -- It is defined in newer versions of vector package.
 instance NFData (V.Vector a)   where
+  rnf v = v `seq` ()
 #endif
 
 instance NFData (TempList m a) where
