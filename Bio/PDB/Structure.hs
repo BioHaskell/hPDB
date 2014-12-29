@@ -1,10 +1,11 @@
-{-# LANGUAGE DisambiguateRecordFields #-}
+{-# LANGUAGE DisambiguateRecordFields, DeriveGeneric #-}
 module Bio.PDB.Structure(String,
                          vdot, vnorm, vproj, vperpend, vperpends, vdihedral, (*|), (|*),
                          Structure(..), Model(..), Chain(..), Residue(..), Atom(..))
 
 where
 
+import GHC.Generics(Generic)
 import Prelude hiding(String)
 import Bio.PDB.EventParser.PDBEvents(String, Vector3(..)) -- extract to a separate module?
 import Control.DeepSeq
@@ -15,7 +16,7 @@ import Bio.PDB.Structure.Vector
 -- | Structure holds all data parsed from a single PDB entry
 data Structure = Structure { -- remarks :: [Map String String]
                              models    :: L.List Model
-                           } deriving (Eq, Show)
+                           } deriving (Eq, Show, Generic)
 
 instance NFData Structure where
   rnf m = rnf (models m) `seq` ()
@@ -31,7 +32,7 @@ deriving instance NFData Atom
 -- | PDB entry may contain multiple models, with slight differences in coordinates etc.
 data Model     = Model     { modelId   :: !Int,
                              chains    :: L.List Chain
-                           } deriving (Eq, Show)
+                           } deriving (Eq, Show, Generic)
 
 instance NFData Model where
   rnf m = modelId m `seq` rnf (chains m) `seq` ()
@@ -39,7 +40,7 @@ instance NFData Model where
 -- | Single linear polymer chain of protein, or nucleic acids
 data Chain     = Chain     { chainId   :: !Char,
                              residues  :: L.List Residue
-                           } deriving (Eq, Show)
+                           } deriving (Eq, Show, Generic)
 
 instance NFData Chain where
   rnf m = chainId m `seq` rnf (residues m) `seq` ()
@@ -51,7 +52,7 @@ data Residue   = Residue   { resName   :: !String,
 
                              insCode   :: !Char
                              -- ss :: SSType 
-                           } deriving (Eq, Show)
+                           } deriving (Eq, Show, Generic)
 
 instance NFData Residue where
   rnf r = rnf (atoms r) `seq` ()
@@ -73,7 +74,7 @@ data Atom      = Atom      { atName    :: !String,
                              segid     :: !String,
                              charge    :: !String,
                              hetatm    :: !Bool
-                           } deriving (Eq, Show)
+                           } deriving (Eq, Show, Generic)
 
 -- constructor is strict in all arguments...
 instance NFData Atom where

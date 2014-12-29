@@ -3,7 +3,7 @@ language: haskell
 matrix:
   allow_failures:
     - env: GHCVER=head
-    - env: GHCVER=7.10.1
+  #  - env: GHCVER=7.10.1
 
 env:
  - GHCVER=7.6.3
