@@ -53,6 +53,9 @@ gzipParams c = GZip.DecompressParams GZip.defaultWindowBits (fromIntegral (BS.le
 #if MIN_VERSION_zlib(0,5,4)
                                      Nothing
 #endif
+#if MIN_VERSION_zlib(0,6,1)
+                                     True
+#endif
   -- Upper bound: compression rate never exceeded 4.7 for big test files.
 
 --bzipParams c = BZip.DecompressParams BZip.DefaultMemoryLevel (fromIntegral (BS.length c * 7 + 4*1024*1024)) -- Upper bound: compression rate never exceeded 6.7 for big test files + 4MiB buffering.
