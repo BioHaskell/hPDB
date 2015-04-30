@@ -1,5 +1,8 @@
 -*-Changelog-*-
 
+1.2.0.2  Apr 2015
+	* Update for zlib version 0.6.1.0.
+
 1.2.0.1  Dec 2014
 	* Relaxed upper bounds
 
