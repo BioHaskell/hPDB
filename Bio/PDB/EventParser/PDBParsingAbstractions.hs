@@ -395,14 +395,14 @@ maybeFgResidue delible fname col r c d i
     Left
       (col,
        BS.concat
-	 [fname, " residue descriptions contains fields: ",
-	  BS.pack $ show [r, c, d, i]])
+         [fname, " residue descriptions contains fields: ",
+          BS.pack $ show [r, c, d, i]])
   | otherwise = Right Nothing
   where obligatoryFields = if delible then [c, i] else [c, d, i]
-	IFStr unr = r
-	IFChar unc = c
-	IFInt und = d
-	IFChar uni = i
+        IFStr unr = r
+        IFChar unc = c
+        IFInt und = d
+        IFChar uni = i
 
 {-# INLINE fgAtom #-}
 -- | Merges a set of values that correspond to a mandatory atom description.
@@ -460,14 +460,14 @@ maybeFgAtom fname col a r c d i
     Left
       (col,
        BS.concat
-	 [fname, " atom descriptions contains fields: ",
-	  BS.pack $ show [a, r, c, d, i]])
+         [fname, " atom descriptions contains fields: ",
+          BS.pack $ show [a, r, c, d, i]])
   | otherwise = Right Nothing
   where IFStr una = a
-	IFStr unr = r
-	IFChar unc = c
-	IFInt und = d
-	IFChar uni = i
+        IFStr unr = r
+        IFChar unc = c
+        IFInt und = d
+        IFChar uni = i
 
 -- Stage 3 is generation of events - code is separated for each kind of event.
 

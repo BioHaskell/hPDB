@@ -39,19 +39,19 @@ data PDBEvent = ATOM { no        :: !Int,
                        hetatm    :: !Bool
                      }                                  |
                 SIGATM { no        :: !Int,
-			 atomtype  :: !String,
-			 restype   :: !String,
-			 chain     :: !Char,
-			 resid     :: !Int,
-			 resins    :: !Char,
-			 altloc    :: !Char,
-			 coords    :: !Vector3,
-			 occupancy :: !Double,
-			 bfactor   :: !Double,
-			 segid     :: !String,
-			 elt       :: !String,
-			 charge    :: !String -- why not a number?
-		       }                                  |
+                         atomtype  :: !String,
+                         restype   :: !String,
+                         chain     :: !Char,
+                         resid     :: !Int,
+                         resins    :: !Char,
+                         altloc    :: !Char,
+                         coords    :: !Vector3,
+                         occupancy :: !Double,
+                         bfactor   :: !Double,
+                         segid     :: !String,
+                         elt       :: !String,
+                         charge    :: !String -- why not a number?
+                       }                                  |
                  ANISOU { no        :: !Int,
                           atomtype  :: !String,
                           restype   :: !String,
