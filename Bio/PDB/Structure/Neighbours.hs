@@ -1,4 +1,6 @@
-{-# LANGUAGE NoMonomorphismRestriction, FlexibleContexts #-}
+{-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE FlexibleContexts          #-}
+{-# LANGUAGE MultiParamTypeClasses     #-}
 -- | Searching for neighbouring atoms in a 3D space using `Octree`.
 module Bio.PDB.Structure.Neighbours(makeOctree,
                                     findInRadius, findNearest,

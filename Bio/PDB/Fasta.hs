@@ -1,4 +1,6 @@
-{-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
+{-# LANGUAGE OverloadedStrings     #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 -- | Conversion of PDB residue codes to FASTA single-letter sequence codes.
 module Bio.PDB.Fasta(resname2fastacode, fastacode2resname  ,
                      defaultResname,    defaultFastaCode   ,
