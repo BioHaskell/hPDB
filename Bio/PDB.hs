@@ -1,3 +1,5 @@
+-- | Default interface for @Bio.PDB@ package.
+-- Ideally should expose all commonly used functions and classes.
 module Bio.PDB(parse, write, PDBWritable,
                Structure(..), Model(..), Chain(..), Residue(..), Atom(..),
                Iterable(..),

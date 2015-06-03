@@ -1,4 +1,6 @@
 {-# LANGUAGE BangPatterns, PatternGuards #-}
+-- | This module leverages sequential builder interface in @Bio.PDB.StructureBuilder.Internal@
+-- to run parser and @StructureBuilder@ in parallel with linear speedup.
 module Bio.PDB.StructureBuilder.Parallel(parseParallel, parseWithNParallel, joinStructure, joinResult)
 where
 
