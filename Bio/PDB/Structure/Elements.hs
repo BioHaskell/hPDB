@@ -253,7 +253,10 @@ covalentRadius    "ZN" = 1.22
 covalentRadius    "ZR" = 1.75
 covalentRadius    x    = defaulting ["Unknown covalent radius for element:", BS.pack $ show x] 0.0
 
-maxCovalentRadius = covalentRadius "FR"
+{-# INLINE maxCovalentRadius #-}
+-- | Upper bound of @covalentRadius@.
+maxCovalentRadius :: Double
+maxCovalentRadius  = covalentRadius "FR"
 
 {-# INLINE atomicMass        #-}
 -- | Atomic mass of a given element in g/mol
@@ -485,7 +488,10 @@ vanDerWaalsRadius "ZN" = 1.39
 vanDerWaalsRadius "ZR" = 2.00
 vanDerWaalsRadius e    = defaulting ["Do not know van der Waals radius of", BS.pack $ show e] 0.0
 
-maxVanDerWaalsRadius = vanDerWaalsRadius "K"
+{-# INLINE maxVanDerWaalsRadius #-}
+-- | Upper bound of @vanDerWaalsRadius@.
+maxVanDerWaalsRadius :: Double
+maxVanDerWaalsRadius  = vanDerWaalsRadius "K"
 
 {-# INLINE assignElement #-}
 -- | Given a PDB 'Atom' extract or guess its 'Element' name.

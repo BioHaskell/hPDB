@@ -1,4 +1,6 @@
-{-# LANGUAGE DisambiguateRecordFields, DeriveGeneric #-}
+{-# LANGUAGE DisambiguateRecordFields #-}
+{-# LANGUAGE DeriveGeneric #-}
+-- | Module defines all components of high-level data type description of PDB model.
 module Bio.PDB.Structure(String,
                          vdot, vnorm, vproj, vperpend, vperpends, vdihedral, (*|), (|*),
                          Structure(..), Model(..), Chain(..), Residue(..), Atom(..))

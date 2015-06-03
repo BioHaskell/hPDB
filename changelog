@@ -1,4 +1,9 @@
 -*-Changelog-*-
+1.2.0.4  Jun 2015
+	* Cleaned, added some documentation.
+
+1.2.0.3  Apr 2015
+	* Version bump.
 
 1.2.0.2  Apr 2015
 	* Update for zlib version 0.6.1.0.

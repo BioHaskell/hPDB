@@ -1,23 +1,31 @@
-{-# LANGUAGE BangPatterns, DisambiguateRecordFields, MultiParamTypeClasses, NamedFieldPuns, FlexibleContexts, OverloadedStrings, RankNTypes #-}
-{-# LANGUAGE RecordWildCards #-} -- for convenient debugging
+{-# LANGUAGE BangPatterns             #-}
+{-# LANGUAGE DisambiguateRecordFields #-}
+{-# LANGUAGE FlexibleContexts         #-}
+{-# LANGUAGE MultiParamTypeClasses    #-}
+{-# LANGUAGE NamedFieldPuns           #-}
+{-# LANGUAGE OverloadedStrings        #-}
+{-# LANGUAGE RankNTypes               #-}
+{-# LANGUAGE RecordWildCards          #-} -- for convenient debugging
 {-# OPTIONS_GHC -fspec-constr-count=2 #-}
+-- | This module allows access to internal interface of @StructureBuilder@ in case that user wants to extend it
+-- by redefining parts.
 module Bio.PDB.StructureBuilder.Internals
 --(parse)
 
 where
 
-import Prelude hiding (String)
-import qualified Data.ByteString.Char8 as BS hiding (reverse)
-import qualified Control.Monad.ST      as ST
-import Control.Monad.State.Strict      as State 
-import Control.Monad(when)
-import Data.STRef                      as STRef
-import Data.Maybe(isNothing, isJust)
+import           Prelude                               hiding (String)
+import qualified Data.ByteString.Char8           as BS hiding (reverse)
+import qualified Control.Monad.ST                as ST
+import           Control.Monad.State.Strict      as State 
+import           Control.Monad(when)
+import           Data.STRef                      as STRef
+import           Data.Maybe(isNothing, isJust)
 
-import Bio.PDB.EventParser.PDBEvents(PDBEvent(..), RESID(..))
+import           Bio.PDB.EventParser.PDBEvents(PDBEvent(..), RESID(..))
 import qualified Bio.PDB.EventParser.PDBEventParser(parsePDBRecords)
-import Bio.PDB.Structure
-import Bio.PDB.Structure.List as L
+import           Bio.PDB.Structure
+import           Bio.PDB.Structure.List          as L
 
 -- | Shorthand for the State monad in which parsing is done.
 -- `t` is existential 'phantom' type to keep ST effects from escaping
@@ -122,7 +130,6 @@ checkChain name = do checkModel
 checkModel :: ParsingMonad t ()
 checkModel = do curModel <- State.gets currentModel
                 when (isNothing curModel) $ openModel defaultModelId
--- | Closes construction of a current residue and appends this residue to a current chain. (Monadic action.)
 --closeResidue :: State.State BState ()
 -- TODO: when createing a dummy model, check that there are no models declared before
 --       [Otherwise one needs to report an error!]
@@ -130,6 +137,7 @@ checkModel = do curModel <- State.gets currentModel
 -- | Default model id, in case none was indicated (for comparison.)
 defaultModelId = 1
 
+-- | Closes construction of a current residue and appends this residue to a current chain. (Monadic action.)
 closeResidue :: ParsingMonad t ()
 closeResidue = do r <- State.gets currentResidue
                   when (isJust r) $ do let Just res = r
@@ -194,7 +202,6 @@ closeModel = do closeChain
 
 -- | Finalizes construction of record holding PDB entry data.
 -- NOTE: this one is different and should only be used after parsing is complete!
-
 closeStructure :: ParsingMonad t ()
 closeStructure = do closeModel
                     sc  <- State.gets structureContents
@@ -205,6 +212,7 @@ closeStructure = do closeModel
       bstate { currentStructure  = aStructure { models = sc },
                structureContents = undefined }
 
+-- | Updates line counter.
 nextLine :: ParsingMonad t ()
 nextLine = do lnref <- State.gets lineNo
               lift $ STRef.modifySTRef lnref (+1)
