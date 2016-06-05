@@ -1,5 +1,5 @@
 -*-Changelog-*-
-1.2.0.7  Jun 2016
+1.2.0.8  Jun 2016
 	* Use hashmap for element properties.
 	  Great thanks to Ben Gamari:
 	  https://ghc.haskell.org/trac/ghc/ticket/917

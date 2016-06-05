@@ -26,7 +26,7 @@ type Element = BS.ByteString
 -- TODO: May be better as a newtype, and make sure that other modules use this declaration
 
 -- | Internal method that reports error to stderr, and return given default value.
-defaultingLookup :: BS.ByteString -> v -> HashMap Element v -> Element -> v
+defaultingLookup :: BS.ByteString -> v -> HashMap String v -> Element -> v
 defaultingLookup msg defaultValue dict e =
       fromMaybe withWarning
     $ M.lookup (BS.unpack e) dict
