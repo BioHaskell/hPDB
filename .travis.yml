@@ -50,20 +50,13 @@ script:
   - echo "Package distribution built."
 
   # check that the generated source-distribution can be built & installed
-  - export SRC_TGZ=$(cabal info . | awk '{print $2 ".tar.gz";exit}') ;
+  - export SRC_TGZ=$(cabal-$CABALVER info . | awk '{print $2 ".tar.gz";exit}') ;
     cd dist/;
     if [ -f "$SRC_TGZ" ]; then
-       cabal install "$SRC_TGZ";
+       cabal-$CABALVER install "$SRC_TGZ";
     else
        echo "expected '$SRC_TGZ' not found";
        exit 1;
     fi
   - echo "Package built successfully!"
 
-#after_script:
-#  - echo ${PWD}
-#  - find dist -iname '*.tix'
-#  - travis_retry cabal install codecov-haskell hpc-coveralls
-#  - codecov-haskell                               json-autotype-random-test json-autotype-qc-test 
-#  - hpc-coveralls   --repo-token ${COVERALLS_KEY} json-autotype-random-test json-autotype-qc-test
-#
