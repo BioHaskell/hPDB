@@ -18,557 +18,577 @@ import Data.ByteString.Char8 as BS
 import System.IO.Unsafe(unsafePerformIO)
 import System.IO(stderr)
 import Bio.PDB.Structure(Atom(..))
+import Data.HashMap.Strict as M
+import Data.Maybe
 
 -- | Type alias for 'Element' names.
 type Element = BS.ByteString
 -- TODO: May be better as a newtype, and make sure that other modules use this declaration
 
 -- | Internal method that reports error to stderr, and return given default value.
-defaulting e defaultValue = unsafePerformIO $ do BS.hPutStrLn stderr $ BS.concat e
-                                                 return defaultValue
+defaultingLookup :: BS.ByteString -> v -> HashMap Element v -> Element -> v
+defaultingLookup msg defaultValue dict e =
+      fromMaybe withWarning
+    $ M.lookup (BS.unpack e) dict
+  where
+    withWarning = unsafePerformIO $ do BS.hPutStrLn stderr $ BS.concat [msg, BS.pack . show . BS.unpack $ e]
+                                       return defaultValue
 
-{-# INLINE atomicNumber      #-}
 -- | Atomic number of a given element
 atomicNumber :: Element -> Int
-atomicNumber       "C" =   6
-atomicNumber       "N" =   7
-atomicNumber       "O" =   8
-atomicNumber       "P" =  15
-atomicNumber       "S" =  16
-atomicNumber       "H" =   1
-atomicNumber      "AC" =  89
-atomicNumber      "AG" =  47
-atomicNumber      "AL" =  13
-atomicNumber      "AM" =  95
-atomicNumber      "AR" =  18
-atomicNumber      "AS" =  33
-atomicNumber      "AT" =  85
-atomicNumber      "AU" =  79
-atomicNumber       "B" =   5
-atomicNumber      "BA" =  56
-atomicNumber      "BE" =   4
-atomicNumber      "BH" = 107
-atomicNumber      "BI" =  83
-atomicNumber      "BK" =  97
-atomicNumber      "BR" =  35
-atomicNumber      "CA" =  20
-atomicNumber      "CD" =  48
-atomicNumber      "CE" =  58
-atomicNumber      "CF" =  98
-atomicNumber      "CL" =  17
-atomicNumber      "CM" =  96
-atomicNumber      "CO" =  27
-atomicNumber      "CR" =  24
-atomicNumber      "CS" =  55
-atomicNumber      "CU" =  29
-atomicNumber      "DB" = 105
-atomicNumber      "DS" = 110
-atomicNumber      "DY" =  66
-atomicNumber      "ER" =  68
-atomicNumber      "ES" =  99
-atomicNumber      "EU" =  63
-atomicNumber       "F" =   9
-atomicNumber      "FE" =  26
-atomicNumber      "FM" = 100
-atomicNumber      "FR" =  87
-atomicNumber      "GA" =  31
-atomicNumber      "GD" =  64
-atomicNumber      "GE" =  32
-atomicNumber      "HE" =   2
-atomicNumber      "HF" =  72
-atomicNumber      "HG" =  80
-atomicNumber      "HO" =  67
-atomicNumber      "HS" = 108
-atomicNumber       "I" =  53
-atomicNumber      "IN" =  49
-atomicNumber      "IR" =  77
-atomicNumber       "K" =  19
-atomicNumber      "KR" =  36
-atomicNumber      "LA" =  57
-atomicNumber      "LI" =   3
-atomicNumber      "LR" = 103
-atomicNumber      "LU" =  71
-atomicNumber      "MD" = 101
-atomicNumber      "MG" =  12
-atomicNumber      "MN" =  25
-atomicNumber      "MO" =  42
-atomicNumber      "MT" = 109
-atomicNumber      "NA" =  11
-atomicNumber      "NB" =  41
-atomicNumber      "ND" =  60
-atomicNumber      "NE" =  10
-atomicNumber      "NI" =  28
-atomicNumber      "NO" = 102
-atomicNumber      "NP" =  93
-atomicNumber      "OS" =  76
-atomicNumber      "PA" =  91
-atomicNumber      "PB" =  82
-atomicNumber      "PD" =  46
-atomicNumber      "PM" =  61
-atomicNumber      "PO" =  84
-atomicNumber      "PR" =  59
-atomicNumber      "PT" =  78
-atomicNumber      "PU" =  94
-atomicNumber      "RA" =  88
-atomicNumber      "RB" =  37
-atomicNumber      "RE" =  75
-atomicNumber      "RF" = 104
-atomicNumber      "RH" =  45
-atomicNumber      "RN" =  86
-atomicNumber      "RU" =  44
-atomicNumber      "SB" =  51
-atomicNumber      "SC" =  21
-atomicNumber      "SE" =  34
-atomicNumber      "SG" = 106
-atomicNumber      "SI" =  14
-atomicNumber      "SM" =  62
-atomicNumber      "SN" =  50
-atomicNumber      "SR" =  38
-atomicNumber      "TA" =  73
-atomicNumber      "TB" =  65
-atomicNumber      "TC" =  43
-atomicNumber      "TE" =  52
-atomicNumber      "TH" =  90
-atomicNumber      "TI" =  22
-atomicNumber      "TL" =  81
-atomicNumber      "TM" =  69
-atomicNumber       "U" =  92
-atomicNumber       "V" =  23
-atomicNumber       "W" =  74
-atomicNumber      "XE" =  54
-atomicNumber       "Y" =  39
-atomicNumber      "YB" =  70
-atomicNumber      "ZN" =  30
-atomicNumber      "ZR" =  40
-atomicNumber      x    = defaulting ["Unknown atomic number for element:", BS.pack $ show x] 0
+atomicNumber = defaultingLookup "Unknown atomic number for element:"
+                                0 dict 
+  where
+    dict = M.fromList [
+              ( "C",   6)
+             ,( "N",   7)
+             ,( "O",   8)
+             ,( "P",  15)
+             ,( "S",  16)
+             ,( "H",   1)
+             ,("AC",  89)
+             ,("AG",  47)
+             ,("AL",  13)
+             ,("AM",  95)
+             ,("AR",  18)
+             ,("AS",  33)
+             ,("AT",  85)
+             ,("AU",  79)
+             ,( "B",   5)
+             ,("BA",  56)
+             ,("BE",   4)
+             ,("BH", 107)
+             ,("BI",  83)
+             ,("BK",  97)
+             ,("BR",  35)
+             ,("CA",  20)
+             ,("CD",  48)
+             ,("CE",  58)
+             ,("CF",  98)
+             ,("CL",  17)
+             ,("CM",  96)
+             ,("CO",  27)
+             ,("CR",  24)
+             ,("CS",  55)
+             ,("CU",  29)
+             ,("DB", 105)
+             ,("DS", 110)
+             ,("DY",  66)
+             ,("ER",  68)
+             ,("ES",  99)
+             ,("EU",  63)
+             ,( "F",   9)
+             ,("FE",  26)
+             ,("FM", 100)
+             ,("FR",  87)
+             ,("GA",  31)
+             ,("GD",  64)
+             ,("GE",  32)
+             ,("HE",   2)
+             ,("HF",  72)
+             ,("HG",  80)
+             ,("HO",  67)
+             ,("HS", 108)
+             ,( "I",  53)
+             ,("IN",  49)
+             ,("IR",  77)
+             ,( "K",  19)
+             ,("KR",  36)
+             ,("LA",  57)
+             ,("LI",   3)
+             ,("LR", 103)
+             ,("LU",  71)
+             ,("MD", 101)
+             ,("MG",  12)
+             ,("MN",  25)
+             ,("MO",  42)
+             ,("MT", 109)
+             ,("NA",  11)
+             ,("NB",  41)
+             ,("ND",  60)
+             ,("NE",  10)
+             ,("NI",  28)
+             ,("NO", 102)
+             ,("NP",  93)
+             ,("OS",  76)
+             ,("PA",  91)
+             ,("PB",  82)
+             ,("PD",  46)
+             ,("PM",  61)
+             ,("PO",  84)
+             ,("PR",  59)
+             ,("PT",  78)
+             ,("PU",  94)
+             ,("RA",  88)
+             ,("RB",  37)
+             ,("RE",  75)
+             ,("RF", 104)
+             ,("RH",  45)
+             ,("RN",  86)
+             ,("RU",  44)
+             ,("SB",  51)
+             ,("SC",  21)
+             ,("SE",  34)
+             ,("SG", 106)
+             ,("SI",  14)
+             ,("SM",  62)
+             ,("SN",  50)
+             ,("SR",  38)
+             ,("TA",  73)
+             ,("TB",  65)
+             ,("TC",  43)
+             ,("TE",  52)
+             ,("TH",  90)
+             ,("TI",  22)
+             ,("TL",  81)
+             ,("TM",  69)
+             ,( "U",  92)
+             ,( "V",  23)
+             ,( "W",  74)
+             ,("XE",  54)
+             ,( "Y",  39)
+             ,("YB",  70)
+             ,("ZN",  30)
+             ,("ZR",  40)
+             ]
 
-{-# INLINE covalentRadius    #-}
 -- | Covalent radius of an element with a given name.
-covalentRadius    "AC" = 2.15
-covalentRadius    "AG" = 1.45
-covalentRadius    "AL" = 1.21
-covalentRadius    "AM" = 1.80
-covalentRadius    "AR" = 1.51
-covalentRadius    "AS" = 1.21
-covalentRadius    "AT" = 1.21
-covalentRadius    "AU" = 1.36
-covalentRadius     "B" = 0.83
-covalentRadius    "BA" = 2.15
-covalentRadius    "BE" = 0.96
-covalentRadius    "BH" = 1.50
-covalentRadius    "BI" = 1.48
-covalentRadius    "BK" = 1.54
-covalentRadius    "BR" = 1.21
-covalentRadius     "C" = 0.68
-covalentRadius    "CA" = 1.76
-covalentRadius    "CD" = 1.44
-covalentRadius    "CE" = 2.04
-covalentRadius    "CF" = 1.83
-covalentRadius    "CL" = 0.99
-covalentRadius    "CM" = 1.69
-covalentRadius    "CO" = 1.26
-covalentRadius    "CR" = 1.39
-covalentRadius    "CS" = 2.44
-covalentRadius    "CU" = 1.32
-covalentRadius    "DB" = 1.50
-covalentRadius    "DS" = 1.50
-covalentRadius    "DY" = 1.92
-covalentRadius    "ER" = 1.89
-covalentRadius    "ES" = 1.50
-covalentRadius    "EU" = 1.98
-covalentRadius     "F" = 0.64
-covalentRadius    "FE" = 1.52
-covalentRadius    "FM" = 1.50
-covalentRadius    "FR" = 2.60
-covalentRadius    "GA" = 1.22
-covalentRadius    "GD" = 1.96
-covalentRadius    "GE" = 1.17
-covalentRadius     "H" = 0.23
-covalentRadius    "HE" = 1.50
-covalentRadius    "HF" = 1.75
-covalentRadius    "HG" = 1.32
-covalentRadius    "HO" = 1.92
-covalentRadius    "HS" = 1.50
-covalentRadius     "I" = 1.40
-covalentRadius    "IN" = 1.42
-covalentRadius    "IR" = 1.41
-covalentRadius     "K" = 2.03
-covalentRadius    "KR" = 1.50
-covalentRadius    "LA" = 2.07
-covalentRadius    "LI" = 1.28
-covalentRadius    "LR" = 1.50
-covalentRadius    "LU" = 1.87
-covalentRadius    "MD" = 1.50
-covalentRadius    "MG" = 1.41
-covalentRadius    "MN" = 1.61
-covalentRadius    "MO" = 1.54
-covalentRadius    "MT" = 1.50
-covalentRadius     "N" = 0.68
-covalentRadius    "NA" = 1.66
-covalentRadius    "NB" = 1.64
-covalentRadius    "ND" = 2.01
-covalentRadius    "NE" = 1.50
-covalentRadius    "NI" = 1.24
-covalentRadius    "NO" = 1.50
-covalentRadius    "NP" = 1.90
-covalentRadius     "O" = 0.68
-covalentRadius    "OS" = 1.44
-covalentRadius     "P" = 1.05
-covalentRadius    "PA" = 2.00
-covalentRadius    "PB" = 1.46
-covalentRadius    "PD" = 1.39
-covalentRadius    "PM" = 1.99
-covalentRadius    "PO" = 1.40
-covalentRadius    "PR" = 2.03
-covalentRadius    "PT" = 1.36
-covalentRadius    "PU" = 1.87
-covalentRadius    "RA" = 2.21
-covalentRadius    "RB" = 2.20
-covalentRadius    "RE" = 1.51
-covalentRadius    "RF" = 1.50
-covalentRadius    "RH" = 1.42
-covalentRadius    "RN" = 1.50
-covalentRadius    "RU" = 1.46
-covalentRadius     "S" = 1.02
-covalentRadius    "SB" = 1.39
-covalentRadius    "SC" = 1.70
-covalentRadius    "SE" = 1.22
-covalentRadius    "SG" = 1.50
-covalentRadius    "SI" = 1.20
-covalentRadius    "SM" = 1.98
-covalentRadius    "SN" = 1.39
-covalentRadius    "SR" = 1.95
-covalentRadius    "TA" = 1.70
-covalentRadius    "TB" = 1.94
-covalentRadius    "TC" = 1.47
-covalentRadius    "TE" = 1.47
-covalentRadius    "TH" = 2.06
-covalentRadius    "TI" = 1.60
-covalentRadius    "TL" = 1.45
-covalentRadius    "TM" = 1.90
-covalentRadius     "U" = 1.96
-covalentRadius     "V" = 1.53
-covalentRadius     "W" = 1.62
-covalentRadius    "XE" = 1.50
-covalentRadius     "Y" = 1.90
-covalentRadius    "YB" = 1.87
-covalentRadius    "ZN" = 1.22
-covalentRadius    "ZR" = 1.75
-covalentRadius    x    = defaulting ["Unknown covalent radius for element:", BS.pack $ show x] 0.0
+covalentRadius = defaultingLookup "Unknown covalent radius for element:"
+                                  0.0 dict 
+  where
+    dict = M.fromList [
+               ("AC", 2.15)
+             , ("AG", 1.45)
+             , ("AL", 1.21)
+             , ("AM", 1.80)
+             , ("AR", 1.51)
+             , ("AS", 1.21)
+             , ("AT", 1.21)
+             , ("AU", 1.36)
+             , ( "B", 0.83)
+             , ("BA", 2.15)
+             , ("BE", 0.96)
+             , ("BH", 1.50)
+             , ("BI", 1.48)
+             , ("BK", 1.54)
+             , ("BR", 1.21)
+             , ( "C", 0.68)
+             , ("CA", 1.76)
+             , ("CD", 1.44)
+             , ("CE", 2.04)
+             , ("CF", 1.83)
+             , ("CL", 0.99)
+             , ("CM", 1.69)
+             , ("CO", 1.26)
+             , ("CR", 1.39)
+             , ("CS", 2.44)
+             , ("CU", 1.32)
+             , ("DB", 1.50)
+             , ("DS", 1.50)
+             , ("DY", 1.92)
+             , ("ER", 1.89)
+             , ("ES", 1.50)
+             , ("EU", 1.98)
+             , ( "F", 0.64)
+             , ("FE", 1.52)
+             , ("FM", 1.50)
+             , ("FR", 2.60)
+             , ("GA", 1.22)
+             , ("GD", 1.96)
+             , ("GE", 1.17)
+             , ( "H", 0.23)
+             , ("HE", 1.50)
+             , ("HF", 1.75)
+             , ("HG", 1.32)
+             , ("HO", 1.92)
+             , ("HS", 1.50)
+             , ( "I", 1.40)
+             , ("IN", 1.42)
+             , ("IR", 1.41)
+             , ( "K", 2.03)
+             , ("KR", 1.50)
+             , ("LA", 2.07)
+             , ("LI", 1.28)
+             , ("LR", 1.50)
+             , ("LU", 1.87)
+             , ("MD", 1.50)
+             , ("MG", 1.41)
+             , ("MN", 1.61)
+             , ("MO", 1.54)
+             , ("MT", 1.50)
+             , ( "N", 0.68)
+             , ("NA", 1.66)
+             , ("NB", 1.64)
+             , ("ND", 2.01)
+             , ("NE", 1.50)
+             , ("NI", 1.24)
+             , ("NO", 1.50)
+             , ("NP", 1.90)
+             , ( "O", 0.68)
+             , ("OS", 1.44)
+             , ( "P", 1.05)
+             , ("PA", 2.00)
+             , ("PB", 1.46)
+             , ("PD", 1.39)
+             , ("PM", 1.99)
+             , ("PO", 1.40)
+             , ("PR", 2.03)
+             , ("PT", 1.36)
+             , ("PU", 1.87)
+             , ("RA", 2.21)
+             , ("RB", 2.20)
+             , ("RE", 1.51)
+             , ("RF", 1.50)
+             , ("RH", 1.42)
+             , ("RN", 1.50)
+             , ("RU", 1.46)
+             , ( "S", 1.02)
+             , ("SB", 1.39)
+             , ("SC", 1.70)
+             , ("SE", 1.22)
+             , ("SG", 1.50)
+             , ("SI", 1.20)
+             , ("SM", 1.98)
+             , ("SN", 1.39)
+             , ("SR", 1.95)
+             , ("TA", 1.70)
+             , ("TB", 1.94)
+             , ("TC", 1.47)
+             , ("TE", 1.47)
+             , ("TH", 2.06)
+             , ("TI", 1.60)
+             , ("TL", 1.45)
+             , ("TM", 1.90)
+             , ( "U", 1.96)
+             , ( "V", 1.53)
+             , ( "W", 1.62)
+             , ("XE", 1.50)
+             , ( "Y", 1.90)
+             , ("YB", 1.87)
+             , ("ZN", 1.22)
+             , ("ZR", 1.75)
+             ]
 
 {-# INLINE maxCovalentRadius #-}
 -- | Upper bound of @covalentRadius@.
 maxCovalentRadius :: Double
 maxCovalentRadius  = covalentRadius "FR"
 
-{-# INLINE atomicMass        #-}
 -- | Atomic mass of a given element in g/mol
 atomicMass :: Element -> Double
-atomicMass         "C" =  12.011
-atomicMass         "N" =  14.007
-atomicMass         "O" =  15.999
-atomicMass         "P" =  30.974
-atomicMass         "S" =  32.066
-atomicMass         "H" =   1.008
-atomicMass        "AC" = 227.000
-atomicMass        "AG" = 107.868
-atomicMass        "AL" =  26.982
-atomicMass        "AM" = 243.000
-atomicMass        "AR" =  39.948
-atomicMass        "AS" =  74.922
-atomicMass        "AT" = 210.000
-atomicMass        "AU" = 196.967
-atomicMass         "B" =  10.811
-atomicMass        "BA" = 137.327
-atomicMass        "BE" =   9.012
-atomicMass        "BH" = 264.000
-atomicMass        "BI" = 208.980
-atomicMass        "BK" = 247.000
-atomicMass        "BR" =  79.904
-atomicMass        "CA" =  40.078
-atomicMass        "CD" = 112.411
-atomicMass        "CE" = 140.116
-atomicMass        "CF" = 251.000
-atomicMass        "CL" =  35.453
-atomicMass        "CM" = 247.000
-atomicMass        "CO" =  58.933
-atomicMass        "CR" =  51.996
-atomicMass        "CS" = 132.905
-atomicMass        "CU" =  63.546
-atomicMass        "DB" = 262.000
-atomicMass        "DS" = 271.000
-atomicMass        "DY" = 162.500
-atomicMass        "ER" = 167.260
-atomicMass        "ES" = 252.000
-atomicMass        "EU" = 151.964
-atomicMass         "F" =  18.998
-atomicMass        "FE" =  55.845
-atomicMass        "FM" = 257.000
-atomicMass        "FR" = 223.000
-atomicMass        "GA" =  69.723
-atomicMass        "GD" = 157.250
-atomicMass        "GE" =  72.610
-atomicMass        "HE" =   4.003
-atomicMass        "HF" = 178.490
-atomicMass        "HG" = 200.590
-atomicMass        "HO" = 164.930
-atomicMass        "HS" = 269.000
-atomicMass         "I" = 126.904
-atomicMass        "IN" = 114.818
-atomicMass        "IR" = 192.217
-atomicMass         "K" =  39.098
-atomicMass        "KR" =  83.800
-atomicMass        "LA" = 138.906
-atomicMass        "LI" =   6.941
-atomicMass        "LR" = 262.000
-atomicMass        "LU" = 174.967
-atomicMass        "MD" = 258.000
-atomicMass        "MG" =  24.305
-atomicMass        "MN" =  54.938
-atomicMass        "MO" =  95.940
-atomicMass        "MT" = 268.000
-atomicMass        "NA" =  22.991
-atomicMass        "NB" =  92.906
-atomicMass        "ND" = 144.240
-atomicMass        "NE" =  20.180
-atomicMass        "NI" =  58.693
-atomicMass        "NO" = 259.000
-atomicMass        "NP" = 237.000
-atomicMass        "OS" = 190.230
-atomicMass        "PA" = 231.036
-atomicMass        "PB" = 207.200
-atomicMass        "PD" = 106.420
-atomicMass        "PM" = 145.000
-atomicMass        "PO" = 210.000
-atomicMass        "PR" = 140.908
-atomicMass        "PT" = 195.078
-atomicMass        "PU" = 244.000
-atomicMass        "RA" = 226.000
-atomicMass        "RB" =  85.468
-atomicMass        "RE" = 186.207
-atomicMass        "RF" = 261.000
-atomicMass        "RH" = 102.906
-atomicMass        "RN" = 222.000
-atomicMass        "RU" = 101.070
-atomicMass        "SB" = 121.760
-atomicMass        "SC" =  44.956
-atomicMass        "SE" =  78.960
-atomicMass        "SG" = 266.000
-atomicMass        "SI" =  28.086
-atomicMass        "SM" = 150.360
-atomicMass        "SN" = 118.710
-atomicMass        "SR" =  87.620
-atomicMass        "TA" = 180.948
-atomicMass        "TB" = 158.925
-atomicMass        "TC" =  98.000
-atomicMass        "TE" = 127.600
-atomicMass        "TH" = 232.038
-atomicMass        "TI" =  47.867
-atomicMass        "TL" = 204.383
-atomicMass        "TM" = 168.934
-atomicMass         "U" = 238.029
-atomicMass         "V" =  50.942
-atomicMass         "W" = 183.840
-atomicMass        "XE" = 131.290
-atomicMass         "Y" =  88.906
-atomicMass        "YB" = 173.040
-atomicMass        "ZN" =  65.390
-atomicMass        "ZR" =  91.224
-atomicMass        x    = defaulting ["Unknown atomic mass for element:", BS.pack $ show x] 0.0
+atomicMass = defaultingLookup "Unknown atomic mass for element:"
+                              0.0 dict 
+  where
+    dict = M.fromList [
+              ( "C",  12.011)
+             ,( "N",  14.007)
+             ,( "O",  15.999)
+             ,( "P",  30.974)
+             ,( "S",  32.066)
+             ,( "H",   1.008)
+             ,("AC", 227.000)
+             ,("AG", 107.868)
+             ,("AL",  26.982)
+             ,("AM", 243.000)
+             ,("AR",  39.948)
+             ,("AS",  74.922)
+             ,("AT", 210.000)
+             ,("AU", 196.967)
+             ,( "B",  10.811)
+             ,("BA", 137.327)
+             ,("BE",   9.012)
+             ,("BH", 264.000)
+             ,("BI", 208.980)
+             ,("BK", 247.000)
+             ,("BR",  79.904)
+             ,("CA",  40.078)
+             ,("CD", 112.411)
+             ,("CE", 140.116)
+             ,("CF", 251.000)
+             ,("CL",  35.453)
+             ,("CM", 247.000)
+             ,("CO",  58.933)
+             ,("CR",  51.996)
+             ,("CS", 132.905)
+             ,("CU",  63.546)
+             ,("DB", 262.000)
+             ,("DS", 271.000)
+             ,("DY", 162.500)
+             ,("ER", 167.260)
+             ,("ES", 252.000)
+             ,("EU", 151.964)
+             ,( "F",  18.998)
+             ,("FE",  55.845)
+             ,("FM", 257.000)
+             ,("FR", 223.000)
+             ,("GA",  69.723)
+             ,("GD", 157.250)
+             ,("GE",  72.610)
+             ,("HE",   4.003)
+             ,("HF", 178.490)
+             ,("HG", 200.590)
+             ,("HO", 164.930)
+             ,("HS", 269.000)
+             ,( "I", 126.904)
+             ,("IN", 114.818)
+             ,("IR", 192.217)
+             ,( "K",  39.098)
+             ,("KR",  83.800)
+             ,("LA", 138.906)
+             ,("LI",   6.941)
+             ,("LR", 262.000)
+             ,("LU", 174.967)
+             ,("MD", 258.000)
+             ,("MG",  24.305)
+             ,("MN",  54.938)
+             ,("MO",  95.940)
+             ,("MT", 268.000)
+             ,("NA",  22.991)
+             ,("NB",  92.906)
+             ,("ND", 144.240)
+             ,("NE",  20.180)
+             ,("NI",  58.693)
+             ,("NO", 259.000)
+             ,("NP", 237.000)
+             ,("OS", 190.230)
+             ,("PA", 231.036)
+             ,("PB", 207.200)
+             ,("PD", 106.420)
+             ,("PM", 145.000)
+             ,("PO", 210.000)
+             ,("PR", 140.908)
+             ,("PT", 195.078)
+             ,("PU", 244.000)
+             ,("RA", 226.000)
+             ,("RB",  85.468)
+             ,("RE", 186.207)
+             ,("RF", 261.000)
+             ,("RH", 102.906)
+             ,("RN", 222.000)
+             ,("RU", 101.070)
+             ,("SB", 121.760)
+             ,("SC",  44.956)
+             ,("SE",  78.960)
+             ,("SG", 266.000)
+             ,("SI",  28.086)
+             ,("SM", 150.360)
+             ,("SN", 118.710)
+             ,("SR",  87.620)
+             ,("TA", 180.948)
+             ,("TB", 158.925)
+             ,("TC",  98.000)
+             ,("TE", 127.600)
+             ,("TH", 232.038)
+             ,("TI",  47.867)
+             ,("TL", 204.383)
+             ,("TM", 168.934)
+             ,( "U", 238.029)
+             ,( "V",  50.942)
+             ,( "W", 183.840)
+             ,("XE", 131.290)
+             ,( "Y",  88.906)
+             ,("YB", 173.040)
+             ,("ZN",  65.390)
+             ,("ZR",  91.224)
+             ]
 
-{-# INLINE vanDerWaalsRadius #-}
 -- | Van der Waals radius of the given element
 vanDerWaalsRadius :: Element -> Double
-vanDerWaalsRadius  "C" = 1.70
-vanDerWaalsRadius  "N" = 1.55
-vanDerWaalsRadius  "O" = 1.52
-vanDerWaalsRadius  "P" = 1.80
-vanDerWaalsRadius  "S" = 1.80
-vanDerWaalsRadius "AC" = 2.00
-vanDerWaalsRadius "AG" = 1.72
-vanDerWaalsRadius "AL" = 2.00
-vanDerWaalsRadius "AM" = 2.00
-vanDerWaalsRadius "AR" = 1.88
-vanDerWaalsRadius "AS" = 1.85
-vanDerWaalsRadius "AT" = 2.00
-vanDerWaalsRadius "AU" = 1.66
-vanDerWaalsRadius  "B" = 2.00
-vanDerWaalsRadius "BA" = 2.00
-vanDerWaalsRadius "BE" = 2.00
-vanDerWaalsRadius "BH" = 2.00
-vanDerWaalsRadius "BI" = 2.00
-vanDerWaalsRadius "BK" = 2.00
-vanDerWaalsRadius "BR" = 1.85
-vanDerWaalsRadius "CA" = 2.00
-vanDerWaalsRadius "CD" = 1.58
-vanDerWaalsRadius "CE" = 2.00
-vanDerWaalsRadius "CF" = 2.00
-vanDerWaalsRadius "CL" = 1.75
-vanDerWaalsRadius "CM" = 2.00
-vanDerWaalsRadius "CO" = 2.00
-vanDerWaalsRadius "CR" = 2.00
-vanDerWaalsRadius "CS" = 2.00
-vanDerWaalsRadius "CU" = 1.40
-vanDerWaalsRadius "DB" = 2.00
-vanDerWaalsRadius "DS" = 2.00
-vanDerWaalsRadius "DY" = 2.00
-vanDerWaalsRadius "ER" = 2.00
-vanDerWaalsRadius "ES" = 2.00
-vanDerWaalsRadius "EU" = 2.00
-vanDerWaalsRadius  "F" = 1.47
-vanDerWaalsRadius "FE" = 2.00
-vanDerWaalsRadius "FM" = 2.00
-vanDerWaalsRadius "FR" = 2.00
-vanDerWaalsRadius "GA" = 1.87
-vanDerWaalsRadius "GD" = 2.00
-vanDerWaalsRadius "GE" = 2.00
-vanDerWaalsRadius  "H" = 1.09
-vanDerWaalsRadius "HE" = 1.40
-vanDerWaalsRadius "HF" = 2.00
-vanDerWaalsRadius "HG" = 1.55
-vanDerWaalsRadius "HO" = 2.00
-vanDerWaalsRadius "HS" = 2.00
-vanDerWaalsRadius  "I" = 1.98
-vanDerWaalsRadius "IN" = 1.93
-vanDerWaalsRadius "IR" = 2.00
-vanDerWaalsRadius  "K" = 2.75
-vanDerWaalsRadius "KR" = 2.02
-vanDerWaalsRadius "LA" = 2.00
-vanDerWaalsRadius "LI" = 1.82
-vanDerWaalsRadius "LR" = 2.00
-vanDerWaalsRadius "LU" = 2.00
-vanDerWaalsRadius "MD" = 2.00
-vanDerWaalsRadius "MG" = 1.73
-vanDerWaalsRadius "MN" = 2.00
-vanDerWaalsRadius "MO" = 2.00
-vanDerWaalsRadius "MT" = 2.00
-vanDerWaalsRadius "NA" = 2.27
-vanDerWaalsRadius "NB" = 2.00
-vanDerWaalsRadius "ND" = 2.00
-vanDerWaalsRadius "NE" = 1.54
-vanDerWaalsRadius "NI" = 1.63
-vanDerWaalsRadius "NO" = 2.00
-vanDerWaalsRadius "NP" = 2.00
-vanDerWaalsRadius "OS" = 2.00
-vanDerWaalsRadius "PA" = 2.00
-vanDerWaalsRadius "PB" = 2.02
-vanDerWaalsRadius "PD" = 1.63
-vanDerWaalsRadius "PM" = 2.00
-vanDerWaalsRadius "PO" = 2.00
-vanDerWaalsRadius "PR" = 2.00
-vanDerWaalsRadius "PT" = 1.72
-vanDerWaalsRadius "PU" = 2.00
-vanDerWaalsRadius "RA" = 2.00
-vanDerWaalsRadius "RB" = 2.00
-vanDerWaalsRadius "RE" = 2.00
-vanDerWaalsRadius "RF" = 2.00
-vanDerWaalsRadius "RH" = 2.00
-vanDerWaalsRadius "RN" = 2.00
-vanDerWaalsRadius "RU" = 2.00
-vanDerWaalsRadius "SB" = 2.00
-vanDerWaalsRadius "SC" = 2.00
-vanDerWaalsRadius "SE" = 1.90
-vanDerWaalsRadius "SG" = 2.00
-vanDerWaalsRadius "SI" = 2.10
-vanDerWaalsRadius "SM" = 2.00
-vanDerWaalsRadius "SN" = 2.17
-vanDerWaalsRadius "SR" = 2.00
-vanDerWaalsRadius "TA" = 2.00
-vanDerWaalsRadius "TB" = 2.00
-vanDerWaalsRadius "TC" = 2.00
-vanDerWaalsRadius "TE" = 2.06
-vanDerWaalsRadius "TH" = 2.00
-vanDerWaalsRadius "TI" = 2.00
-vanDerWaalsRadius "TL" = 1.96
-vanDerWaalsRadius "TM" = 2.00
-vanDerWaalsRadius  "U" = 1.86
-vanDerWaalsRadius  "V" = 2.00
-vanDerWaalsRadius  "W" = 2.00
-vanDerWaalsRadius "XE" = 2.16
-vanDerWaalsRadius  "Y" = 2.00
-vanDerWaalsRadius "YB" = 2.00
-vanDerWaalsRadius "ZN" = 1.39
-vanDerWaalsRadius "ZR" = 2.00
-vanDerWaalsRadius e    = defaulting ["Do not know van der Waals radius of", BS.pack $ show e] 0.0
+vanDerWaalsRadius = defaultingLookup "Do not know van der Waals radius of "
+                                     0.0 dict 
+  where
+    dict = M.fromList [
+             ( "C", 1.70)
+            ,( "N", 1.55)
+            ,( "O", 1.52)
+            ,( "P", 1.80)
+            ,( "S", 1.80)
+            ,("AC", 2.00)
+            ,("AG", 1.72)
+            ,("AL", 2.00)
+            ,("AM", 2.00)
+            ,("AR", 1.88)
+            ,("AS", 1.85)
+            ,("AT", 2.00)
+            ,("AU", 1.66)
+            , ("B", 2.00)
+            ,("BA", 2.00)
+            ,("BE", 2.00)
+            ,("BH", 2.00)
+            ,("BI", 2.00)
+            ,("BK", 2.00)
+            ,("BR", 1.85)
+            ,("CA", 2.00)
+            ,("CD", 1.58)
+            ,("CE", 2.00)
+            ,("CF", 2.00)
+            ,("CL", 1.75)
+            ,("CM", 2.00)
+            ,("CO", 2.00)
+            ,("CR", 2.00)
+            ,("CS", 2.00)
+            ,("CU", 1.40)
+            ,("DB", 2.00)
+            ,("DS", 2.00)
+            ,("DY", 2.00)
+            ,("ER", 2.00)
+            ,("ES", 2.00)
+            ,("EU", 2.00)
+            ,( "F", 1.47)
+            ,("FE", 2.00)
+            ,("FM", 2.00)
+            ,("FR", 2.00)
+            ,("GA", 1.87)
+            ,("GD", 2.00)
+            ,("GE", 2.00)
+            ,( "H", 1.09)
+            ,("HE", 1.40)
+            ,("HF", 2.00)
+            ,("HG", 1.55)
+            ,("HO", 2.00)
+            ,("HS", 2.00)
+            ,( "I", 1.98)
+            ,("IN", 1.93)
+            ,("IR", 2.00)
+            ,( "K", 2.75)
+            ,("KR", 2.02)
+            ,("LA", 2.00)
+            ,("LI", 1.82)
+            ,("LR", 2.00)
+            ,("LU", 2.00)
+            ,("MD", 2.00)
+            ,("MG", 1.73)
+            ,("MN", 2.00)
+            ,("MO", 2.00)
+            ,("MT", 2.00)
+            ,("NA", 2.27)
+            ,("NB", 2.00)
+            ,("ND", 2.00)
+            ,("NE", 1.54)
+            ,("NI", 1.63)
+            ,("NO", 2.00)
+            ,("NP", 2.00)
+            ,("OS", 2.00)
+            ,("PA", 2.00)
+            ,("PB", 2.02)
+            ,("PD", 1.63)
+            ,("PM", 2.00)
+            ,("PO", 2.00)
+            ,("PR", 2.00)
+            ,("PT", 1.72)
+            ,("PU", 2.00)
+            ,("RA", 2.00)
+            ,("RB", 2.00)
+            ,("RE", 2.00)
+            ,("RF", 2.00)
+            ,("RH", 2.00)
+            ,("RN", 2.00)
+            ,("RU", 2.00)
+            ,("SB", 2.00)
+            ,("SC", 2.00)
+            ,("SE", 1.90)
+            ,("SG", 2.00)
+            ,("SI", 2.10)
+            ,("SM", 2.00)
+            ,("SN", 2.17)
+            ,("SR", 2.00)
+            ,("TA", 2.00)
+            ,("TB", 2.00)
+            ,("TC", 2.00)
+            ,("TE", 2.06)
+            ,("TH", 2.00)
+            ,("TI", 2.00)
+            ,("TL", 1.96)
+            ,("TM", 2.00)
+            ,( "U", 1.86)
+            ,( "V", 2.00)
+            ,( "W", 2.00)
+            ,("XE", 2.16)
+            ,( "Y", 2.00)
+            ,("YB", 2.00)
+            ,("ZN", 1.39)
+            ,("ZR", 2.00)
+            ]
 
 {-# INLINE maxVanDerWaalsRadius #-}
 -- | Upper bound of @vanDerWaalsRadius@.
 maxVanDerWaalsRadius :: Double
 maxVanDerWaalsRadius  = vanDerWaalsRadius "K"
 
-{-# INLINE assignElement #-}
 -- | Given a PDB 'Atom' extract or guess its 'Element' name.
 assignElement :: Atom -> Element
 assignElement at = case element at of
                      ""   -> guessElement . atName $ at
                      code -> code
 
-{-# INLINE guessElement #-}
 -- | Guessing an 'Element' name from PDB 'Atom' name. 
 -- Returns empty string, if 'Element' can't be guessed.
-guessElement :: BS.ByteString -> Element
-guessElement "C"   = "C"
-guessElement "C1'" = "C"
-guessElement "C2"  = "C"
-guessElement "C2'" = "C"
-guessElement "C3'" = "C"
-guessElement "C4"  = "C"
-guessElement "C4'" = "C"
-guessElement "C5"  = "C"
-guessElement "C5'" = "C"
-guessElement "C6"  = "C"
-guessElement "C8"  = "C"
-guessElement "CA"  = "C"
-guessElement "CB"  = "C"
-guessElement "CD"  = "C"
-guessElement "CD1" = "C"
-guessElement "CD2" = "C"
-guessElement "CE"  = "C"
-guessElement "CE1" = "C"
-guessElement "CE2" = "C"
-guessElement "CE3" = "C"
-guessElement "CG"  = "C"
-guessElement "CG1" = "C"
-guessElement "CG2" = "C"
-guessElement "CH2" = "C"
-guessElement "CZ"  = "C"
-guessElement "CZ2" = "C"
-guessElement "CZ3" = "C"
-guessElement "N"   = "N"
-guessElement "N1"  = "N"
-guessElement "N2"  = "N"
-guessElement "N3"  = "N"
-guessElement "N4"  = "N"
-guessElement "N6"  = "N"
-guessElement "N7"  = "N"
-guessElement "N9"  = "N"
-guessElement "ND1" = "N"
-guessElement "ND2" = "N"
-guessElement "NE"  = "N"
-guessElement "NE1" = "N"
-guessElement "NE2" = "N"
-guessElement "NH1" = "N"
-guessElement "NH2" = "N"
-guessElement "NZ"  = "N"
-guessElement "O"   = "O"
-guessElement "O2"  = "O"
-guessElement "O2'" = "O"
-guessElement "O3'" = "O"
-guessElement "O4"  = "O"
-guessElement "O4'" = "O"
-guessElement "O5'" = "O"
-guessElement "O6"  = "O"
-guessElement "OD1" = "O"
-guessElement "OD2" = "O"
-guessElement "OE1" = "O"
-guessElement "OE2" = "O"
-guessElement "OG"  = "O"
-guessElement "OG1" = "O"
-guessElement "OH"  = "O"
-guessElement "OP1" = "O"
-guessElement "OP2" = "O"
-guessElement "OXT" = "O"
-guessElement "P"   = "P"
-guessElement "SD"  = "S"
-guessElement "SG"  = "S"
-guessElement _     = "" -- not a standard residue of protein or nucleic acid
+guessElement :: BS.ByteString -> BS.ByteString
+guessElement = \e -> fromMaybe "" $ M.lookup (BS.unpack e) els
+  where
+    els = M.fromList
+        [ ("C"   , "C"),
+          ("C1'" , "C"),
+          ("C2"  , "C"),
+          ("C2'" , "C"),
+          ("C3'" , "C"),
+          ("C4"  , "C"),
+          ("C4'" , "C"),
+          ("C5"  , "C"),
+          ("C5'" , "C"),
+          ("C6"  , "C"),
+          ("C8"  , "C"),
+          ("CA"  , "C"),
+          ("CB"  , "C"),
+          ("CD"  , "C"),
+          ("CD1" , "C"),
+          ("CD2" , "C"),
+          ("CE"  , "C"),
+          ("CE1" , "C"),
+          ("CE2" , "C"),
+          ("CE3" , "C"),
+          ("CG"  , "C"),
+          ("CG1" , "C"),
+          ("CG2" , "C"),
+          ("CH2" , "C"),
+          ("CZ"  , "C"),
+          ("CZ2" , "C"),
+          ("CZ3" , "C"),
+          ("N"   , "N"),
+          ("N1"  , "N"),
+          ("N2"  , "N"),
+          ("N3"  , "N"),
+          ("N4"  , "N"),
+          ("N6"  , "N"),
+          ("N7"  , "N"),
+          ("N9"  , "N"),
+          ("ND1" , "N"),
+          ("ND2" , "N"),
+          ("NE"  , "N"),
+          ("NE1" , "N"),
+          ("NE2" , "N"),
+          ("NH1" , "N"),
+          ("NH2" , "N"),
+          ("NZ"  , "N"),
+          ("O"   , "O"),
+          ("O2"  , "O"),
+          ("O2'" , "O"),
+          ("O3'" , "O"),
+          ("O4"  , "O"),
+          ("O4'" , "O"),
+          ("O5'" , "O"),
+          ("O6"  , "O"),
+          ("OD1" , "O"),
+          ("OD2" , "O"),
+          ("OE1" , "O"),
+          ("OE2" , "O"),
+          ("OG"  , "O"),
+          ("OG1" , "O"),
+          ("OH"  , "O"),
+          ("OP1" , "O"),
+          ("OP2" , "O"),
+          ("OXT" , "O"),
+          ("P"   , "P"),
+          ("SD"  , "S"),
+          ("SG"  , "S")]
+

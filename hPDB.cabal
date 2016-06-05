@@ -1,5 +1,5 @@
 name:                hPDB
-version:             1.2.0.6
+version:             1.2.0.7
 synopsis:            Protein Databank file format library
 homepage:            https://github.com/BioHaskell/hPDB
 stability:           stable
@@ -57,7 +57,24 @@ flag have-text-format
 
 Library
   ghc-options:      -fspec-constr-count=4 -O3 
-  build-depends:    base>=4.0, base <4.10, ghc-prim, directory, mtl, template-haskell, vector, AC-Vector, containers, deepseq, QuickCheck >= 2.5.0.0, text>=0.11.1.13, iterable >= 3.0, tagged >= 0.7, parallel >= 3.0.0.0, bytestring, zlib, Octree>= 0.5
+  build-depends:    base>=4.0 && <4.10,
+                    ghc-prim,
+                    directory,
+                    mtl,
+                    template-haskell,
+                    vector,
+                    AC-Vector,
+                    containers,
+                    unordered-containers,
+                    deepseq,
+                    QuickCheck >= 2.5.0.0,
+                    text>=0.11.1.13,
+                    iterable >= 3.0,
+                    tagged >= 0.7,
+                    parallel >= 3.0.0.0,
+                    bytestring,
+                    zlib,
+                    Octree>= 0.5
   if flag(have-sse2)
     ghc-options: -msse2 
   if flag(have-mmap)
