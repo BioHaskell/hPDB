@@ -1,3 +1,6 @@
 This parser and associated example programs were created by:
 Michal J. Gajda 2010-2013
 In his free time, unencumbered by work duties.
+
+Thanks a lot to Ben Gamari for extensive analysis of the atom lookup problem:
+https://ghc.haskell.org/trac/ghc/ticket/10565
