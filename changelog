@@ -1,4 +1,7 @@
 -*-Changelog-*-
+1.2.0.5  Jun 2016
+	* Updated bounds for GHC 8.0.
+
 1.2.0.4  Jun 2015
 	* Cleaned, added some documentation.
 
