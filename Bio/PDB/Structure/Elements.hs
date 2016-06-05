@@ -1,5 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 -- | Basic properties of chemical 'Element's as suggested by Cambridge Structural Database.
+--
+-- NOTE: This module contains functions that could use hash tables for the lookup instead.
+-- See https://ghc.haskell.org/trac/ghc/ticket/10565
 module Bio.PDB.Structure.Elements(Element(..),
                                   -- Finding element for a given atom
                                   assignElement,
