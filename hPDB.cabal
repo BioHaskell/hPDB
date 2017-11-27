@@ -1,5 +1,5 @@
 name:                hPDB
-version:             1.2.0.9
+version:             1.2.0.10
 synopsis:            Protein Databank file format library
 homepage:            https://github.com/BioHaskell/hPDB
 stability:           stable
@@ -57,7 +57,7 @@ flag have-text-format
 
 Library
   ghc-options:      -fspec-constr-count=4 -O3 
-  build-depends:    base>=4.0 && <4.10,
+  build-depends:    base>=4.0 && <4.11,
                     ghc-prim,
                     directory,
                     mtl,

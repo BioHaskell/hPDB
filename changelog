@@ -1,4 +1,7 @@
 -*-Changelog-*-
+1.2.0.10  Nov 2017
+	* Relax deps for GHC 8.2
+
 1.2.0.9  Jun 2016
 	* Use hashmap for element properties.
 	  Great thanks to Ben Gamari:
