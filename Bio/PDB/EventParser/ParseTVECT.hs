@@ -56,7 +56,7 @@ parseTVECT line line_no = return $ if null errs
     IFDouble t1     = ft1
     IFDouble t2     = ft2
     IFDouble t3     = ft3
-    result = TVECT serial $ Vector3 t1 t2 t3
+    result = TVECT serial $ V3 t1 t2 t3
 
 -- NOTE: consecutive "TVECT" records should be merged into a single multiline entry with SUCH method
 --mergeTVECTRecords :: [PDBEvent] -> m [PDBEvent]

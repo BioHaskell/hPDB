@@ -63,7 +63,7 @@ Library
                     mtl,
                     template-haskell,
                     vector,
-                    AC-Vector,
+                    linear,
                     containers,
                     unordered-containers >= 0.2.5.0,
                     deepseq,
@@ -74,7 +74,7 @@ Library
                     parallel >= 3.0.0.0,
                     bytestring,
                     zlib,
-                    Octree>= 0.5
+                    Octree>= 0.6
   if flag(have-sse2)
     ghc-options: -msse2 
   if flag(have-mmap)

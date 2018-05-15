@@ -150,7 +150,7 @@ parseATOM line line_no = return $ if null errs
     elt            = unstr fElt
     charge         = unstr fCharge
     -- assemble record
-    coords         = Vector3 x y z
+    coords         = V3 x y z
     result         = case rectag of 
                        "ATOM  " -> ATOM   atid atnam resnam chain resid insid altloc coords occ bFact segid elt charge False
                        "HETATM" -> ATOM   atid atnam resnam chain resid insid altloc coords occ bFact segid elt charge True
