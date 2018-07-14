@@ -43,3 +43,4 @@ affine transform on a substructure.
 * Class-based wrappers showing Structure-Model-Chain-Residue-Atom interface
 with possible wrapping of Repa/Accelerate arrays for fast computation.
 
+Please ask me any questions on [Gitter](https://gitter.im/mgajda).
