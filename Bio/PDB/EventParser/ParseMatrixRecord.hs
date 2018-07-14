@@ -51,7 +51,7 @@ titleFields = [(5,  mKeywords "record header" ["SCALE", "ORIGX", "TVECT", "MTRIX
 -- (3) input line number
 --
 -- Result is a monad action returning a list of 'PDBEvent's.
-parseMatrixRecord :: (Monad m) =>(Int -> Bool -> Int -> [Vector3] -> [Double] -> PDBEvent)-> String-> Int-> m [PDBEvent]
+parseMatrixRecord :: (Monad m) =>(Int -> Bool -> Int -> [V3 Double] -> [Double] -> PDBEvent)-> String-> Int-> m [PDBEvent]
 parseMatrixRecord cons line line_no = return $ if null errs
                                                  then [result]
                                                  else errs
@@ -67,7 +67,7 @@ parseMatrixRecord cons line line_no = return $ if null errs
     IFDouble o3     = fo3
     IFDouble t      = ft
     IFInt   relMol = fRelMol
-    result = cons serial (relMol==1) n [Vector3 o1 o2 o3] [t]
+    result = cons serial (relMol==1) n [V3 o1 o2 o3] [t]
 
 -- | Parses a SCALEn record.
 --

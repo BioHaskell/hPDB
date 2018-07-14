@@ -1,9 +1,9 @@
 -- | Common datatype aliases.
-module Bio.PDB.Common(String(..), Vector3(..))
+module Bio.PDB.Common(String(..), V3(..))
 
 where
 
-import Data.Vector.V3
+import Linear
 
 import Prelude hiding(String)
 
@@ -15,6 +15,6 @@ import Bio.PDB.Util.MissingInstances()
 type String = BS.ByteString
 
 -- -- | Datatype for 3D locations (numbers are in ångströms.)
---instance NFData Vector3 where
---  rnf (Vector3 (x, y, z)) = x `seq` y `seq` z `seq` ()
+--instance NFData V3 where
+--  rnf (V3 (x, y, z)) = x `seq` y `seq` z `seq` ()
 

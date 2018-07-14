@@ -33,7 +33,7 @@ print handle ATOM { no        = num,
                     resid     = rid,
                     resins    = rins,
                     altloc    = al,
-                    coords    = Vector3 x y z,
+                    coords    = V3 x y z,
                     occupancy = occ,
                     bfactor   = bf,
                     segid     = sid,
@@ -206,7 +206,7 @@ print handle CRYST1 { a      = av,
                                               (BS.unpack grp)
                                               z
 print handle TVECT  { serial = sn,
-                      vec    = Vector3 a b c } = hPrintf handle "TVECT %4d%10.5f%10.5f%10.5f\n" sn a b c
+                      vec    = V3 a b c } = hPrintf handle "TVECT %4d%10.5f%10.5f%10.5f\n" sn a b c
 print handle JRNL   { cont    = c,
                       content = contents,
                       isFirst = aJRNL } = printJRNL contents
@@ -283,8 +283,8 @@ printList handle label sep c l = hPrintf handle "%6s  %c %-80s\n" (BS.unpack lab
                                                                   str
   where str = BS.unpack (BS.intercalate sep l)
 
--- | Prints a matrix given as a list of 'Vector3's.
-printMatrix :: Handle -> BS.ByteString -> Int -> [Vector3] -> [Double] -> IO ()
+-- | Prints a matrix given as a list of 'V3 Double's.
+printMatrix :: Handle -> BS.ByteString -> Int -> [V3 Double] -> [Double] -> IO ()
 printMatrix handle ident n []         []     = return ()
 printMatrix handle ident n (vec:vecs) (f:fs) = do hPrintf handle "%5s%c    " (BS.unpack ident) cn
                                                   mapM_ printEntry [a, b, c]
@@ -293,5 +293,5 @@ printMatrix handle ident n (vec:vecs) (f:fs) = do hPrintf handle "%5s%c    " (BS
   where [cn] = show n
         printEntry :: Double -> IO ()
         printEntry = hPrintf handle "%10.6f"
-        Vector3 a b c = vec
+        V3 a b c = vec
 

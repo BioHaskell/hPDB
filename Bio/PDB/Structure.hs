@@ -9,7 +9,7 @@ where
 
 import GHC.Generics(Generic)
 import Prelude hiding(String)
-import Bio.PDB.EventParser.PDBEvents(String, Vector3(..)) -- extract to a separate module?
+import Bio.PDB.EventParser.PDBEvents(String, V3(..)) -- extract to a separate module?
 import Control.DeepSeq
 --import Data.Derive.NFData
 import Bio.PDB.Structure.List as L
@@ -68,7 +68,7 @@ data SSType = SSHelix  HelixType |
 -- | NOTE: disordered atoms are now reported as multiplicates
 data Atom      = Atom      { atName    :: !String,
                              atSerial  :: !Int,
-                             coord     :: !Vector3,
+                             coord     :: !(V3 Double),
 
                              bFactor   :: !Double,
                              occupancy :: !Double,

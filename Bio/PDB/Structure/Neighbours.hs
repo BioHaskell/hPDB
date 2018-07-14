@@ -10,7 +10,7 @@ where
 import qualified Data.Octree                as Oct
 import           Bio.PDB.Structure
 import           Bio.PDB.Iterable
-import           Data.Vector.V3
+import           Linear
 
 -- | Octree of `Atom`s.
 type AtomOctree = Oct.Octree Atom
@@ -26,9 +26,9 @@ makeOctree   :: Iterable a Atom => a -> AtomOctree
 makeOctree   = Oct.fromList . Prelude.map extract . itfoldr (:) []
 
 -- | Find all `Atom`s within a given radius from a point.
-findInRadius :: AtomOctree -> Double -> Vector3 ->      [(Vector3, Atom)]
+findInRadius :: AtomOctree -> Double -> V3 Double -> [(V3 Double, Atom)]
 findInRadius = Oct.withinRange
 
 -- | Find an `Atom`s closest to a point.
-findNearest  :: AtomOctree ->           Vector3 -> Maybe (Vector3, Atom)
+findNearest  :: AtomOctree -> V3 Double -> Maybe (V3 Double, Atom)
 findNearest  = Oct.nearest
