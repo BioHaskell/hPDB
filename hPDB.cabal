@@ -93,13 +93,12 @@ Library
 
 Test-Suite unit-test
   type:             exitcode-stdio-1.0
-  main-is:          Discovered.hs
+  main-is:          Main.hs
   hs-source-dirs:   test
   ghc-options:      -fspec-constr-count=4 -O3 
   build-depends:    base>=4.0 && <4.12,
                     hPDB,
                     tasty,
-                    tasty-discover,
                     tasty-hunit,
                     ghc-prim,
                     directory,
