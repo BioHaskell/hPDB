@@ -128,7 +128,7 @@ Test-Suite unit-test
     cpp-options: -DHAVE_TEXT_FORMAT
     build-depends: text-format >= 0.3.1.0
   other-extensions:       ScopedTypeVariables OverloadedStrings BangPatterns NoMonomorphismRestriction EmptyDataDecls MagicHash CPP PatternGuards NamedFieldPuns DisambiguateRecordFields TemplateHaskell MultiParamTypeClasses FlexibleInstances FlexibleContexts DeriveGeneric
-  other-modules:
+  other-modules:  Bio.PDB.StructureTest
 
 
 
