@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Bio.PDB.StructureTest where
 
+import qualified Data.Vector as V
 import Linear
 import Test.Tasty
 import Test.Tasty.HUnit
@@ -11,6 +12,31 @@ tests :: TestTree
 tests = testGroup "Bio.PDB.StructureTest"
   [ testCase "atom1" unit_atom1
   ]
+
+structure1 :: Structure
+structure1 = Structure {
+    models = V.fromList [ model1 ]
+  }
+
+model1 :: Model
+model1 = Model {
+    modelId = 1
+  , chains = V.fromList [ chain1 ]
+  }
+
+chain1 :: Chain
+chain1 = Chain {
+    chainId = 'C'
+  , residues = V.fromList [ residue1 ]
+  }
+
+residue1 :: Residue
+residue1 = Residue {
+    resName = "resname1"
+  , resSeq = 1
+  , atoms = V.fromList [ atom1 ]
+  , insCode = 'I'
+  }
 
 atom1 :: Atom
 atom1 = Atom {
