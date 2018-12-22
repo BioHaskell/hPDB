@@ -7,6 +7,11 @@ import Test.Tasty.HUnit
 
 import Bio.PDB.Structure
 
+tests :: TestTree
+tests = testGroup "Bio.PDB.StructureTest"
+  [ testCase "atom1" unit_atom1
+  ]
+
 atom1 :: Atom
 atom1 = Atom {
     atName = "nm1"
