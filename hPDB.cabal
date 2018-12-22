@@ -90,3 +90,46 @@ Library
   exposed-modules:  Bio.PDB.EventParser.PDBEvents, Bio.PDB.EventParser.PDBEventParser, Bio.PDB.EventParser.ExperimentalMethods, Bio.PDB.EventParser.HelixTypes, Bio.PDB.EventParser.StrandSense, Bio.PDB.Structure, Bio.PDB.StructureBuilder, Bio.PDB.Iterable, Bio.PDB.IO, Bio.PDB.Fasta, Bio.PDB, Bio.PDB.Structure.Vector, Bio.PDB.Structure.Elements, Bio.PDB.Structure.List, Bio.PDB.StructurePrinter, Bio.PDB.EventParser.PDBEventPrinter, Bio.PDB.IO.OpenAnyFile, Bio.PDB.Structure.Neighbours
   exposed:          True
 
+
+Test-Suite unit-test
+  type:             exitcode-stdio-1.0
+  main-is:          Discovered.hs
+  hs-source-dirs:   test
+  ghc-options:      -fspec-constr-count=4 -O3 
+  build-depends:    base>=4.0 && <4.12,
+                    hPDB,
+                    tasty,
+                    tasty-discover,
+                    tasty-hunit,
+                    ghc-prim,
+                    directory,
+                    mtl,
+                    template-haskell,
+                    vector,
+                    linear,
+                    containers,
+                    unordered-containers >= 0.2.5.0,
+                    deepseq,
+                    QuickCheck >= 2.5.0.0,
+                    text>=0.11.1.13,
+                    iterable >= 3.0,
+                    tagged >= 0.7,
+                    parallel >= 3.0.0.0,
+                    bytestring,
+                    zlib,
+                    Octree>= 0.6
+  if flag(have-sse2)
+    ghc-options: -msse2 
+  if flag(have-mmap)
+    build-depends: mmap
+    cpp-options: -DHAVE_MMAP
+  -- These optimization options change a lot for GHC >= 7.4.1
+  ghc-options: -fspec-constr-count=4 -O3 
+  if flag(have-text-format)
+    cpp-options: -DHAVE_TEXT_FORMAT
+    build-depends: text-format >= 0.3.1.0
+  other-extensions:       ScopedTypeVariables OverloadedStrings BangPatterns NoMonomorphismRestriction EmptyDataDecls MagicHash CPP PatternGuards NamedFieldPuns DisambiguateRecordFields TemplateHaskell MultiParamTypeClasses FlexibleInstances FlexibleContexts DeriveGeneric
+  other-modules:
+
+
+
