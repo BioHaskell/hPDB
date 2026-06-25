@@ -32,7 +32,7 @@ bug-reports:         mailto:mjgajda@googlemail.com
 
 build-type:          Simple
 cabal-version:       >=1.8
-tested-with:         GHC==7.10.3,GHC==8.0.1,GHC==8.2.2
+tested-with:         GHC==7.10.3,GHC==8.0.1,GHC==8.2.2,GHC==9.10.3
 extra-source-files:  README.md INSTALL AUTHORS changelog
 
 source-repository head
@@ -57,7 +57,7 @@ flag have-text-format
 
 Library
   ghc-options:      -fspec-constr-count=4 -O3 
-  build-depends:    base>=4.0 && <4.12,
+  build-depends:    base>=4.0 && <5,
                     ghc-prim,
                     directory,
                     mtl,

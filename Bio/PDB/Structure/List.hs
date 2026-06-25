@@ -10,7 +10,7 @@ module Bio.PDB.Structure.List(List(..), TempList,
                              ) where
 
 --import Prelude(Int,Num(..),Monad(..))
-import Prelude hiding (length, filter, drop, take, init, tail, mapM, splitAt, map, mapM, foldl, foldr, last, (++), concat, head)
+import Prelude hiding (length, filter, drop, take, init, tail, mapM, splitAt, map, mapM, foldl, foldl', foldr, last, (++), concat, head)
 import qualified Data.Vector.Mutable as M
 import qualified Data.Vector as V
 import Control.Monad(when)
@@ -71,7 +71,9 @@ defaultSize       =   4 -- Not much point in allocating less than this...
 -- | Appends an element to a mutable vector.
 add (TempList s vs) a = lift $ do i <- readSTRef s
                                   v <- readSTRef vs
-                                  when (i < 0) $ fail "Negative STRef"
+                                  -- ST has no MonadFail (GHC 9.x); this is an
+                                  -- impossible-state assertion, so use error.
+                                  when (i < 0) $ error "Negative STRef"
                                   let j = i + 1
                                       l = M.length v
                                   v' <- if j > l
@@ -86,7 +88,7 @@ add (TempList s vs) a = lift $ do i <- readSTRef s
 -- | Finalizes a mutable vector, and returns immutable vector.
 --   [Does it shrink allocated space?]
 finalize (TempList s vs) = lift $ do i  <- readSTRef s
-                                     when (i < 0) $ fail "Negative STRef"
+                                     when (i < 0) $ error "Negative STRef"
                                      v  <- readSTRef vs
                                      v' <- V.unsafeFreeze v
                                      writeSTRef s (-1)

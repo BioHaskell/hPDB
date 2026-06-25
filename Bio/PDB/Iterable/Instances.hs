@@ -25,12 +25,19 @@ $(self_iterable [t| Chain     |] )
 $(self_iterable [t| Residue   |] )
 $(self_iterable [t| Atom      |] )
 
-$(trans_iterable [t| Structure |] [t| Model   |] [t| Chain   |] )
-$(trans_iterable [t| Structure |] [t| Model   |] [t| Residue |] )
-$(trans_iterable [t| Structure |] [t| Model   |] [t| Atom    |] )
+-- NOTE (GHC 9.x): trans_iterable A B C builds `Iterable A C` from
+-- `Iterable A B` + `Iterable B C`, so each transitive instance must be
+-- spliced AFTER the instances it composes.  Modern GHC resolves TH-generated
+-- instances in declaration order within a module, so these are now ordered
+-- deepest-first (Chain->Residue->Atom, then Model->..., then Structure->...);
+-- the original order had Structure->Model->Residue before Model->Chain->Residue
+-- and no longer type-checks.
+$(trans_iterable [t| Chain     |] [t| Residue |] [t| Atom    |] )
 
 $(trans_iterable [t| Model     |] [t| Chain   |] [t| Residue |] )
 $(trans_iterable [t| Model     |] [t| Chain   |] [t| Atom    |] )
 
-$(trans_iterable [t| Chain     |] [t| Residue |] [t| Atom    |] )
+$(trans_iterable [t| Structure |] [t| Model   |] [t| Chain   |] )
+$(trans_iterable [t| Structure |] [t| Model   |] [t| Residue |] )
+$(trans_iterable [t| Structure |] [t| Model   |] [t| Atom    |] )
 
