@@ -1,4 +1,4 @@
 packages: .
-          ../iterable-3.0
+          ../iterable
           rg-driver
 allow-newer: all
