@@ -1,0 +1,13 @@
+cabal-version: 2.4
+name: rg-driver
+version: 0
+executable rg
+  main-is: Rg.hs
+  build-depends: base, hPDB, linear
+  default-language: Haskell2010
+  ghc-options: -O2
+executable rgpar
+  main-is: RgPar.hs
+  build-depends: base, hPDB, linear, deepseq
+  default-language: Haskell2010
+  ghc-options: -O2 -threaded -rtsopts "-with-rtsopts=-s"

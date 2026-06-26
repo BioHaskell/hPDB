@@ -23,3 +23,8 @@ TAGS
 record_stats.txt
 dist
 attic
+dist-newstyle/
+
+# Downloadable RCSB fixture (files.rcsb.org/download/1HTQ.pdb.gz) -- not vendored
+*.pdb.gz
+/1HTQ.pdb
