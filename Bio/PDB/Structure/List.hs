@@ -1,4 +1,4 @@
-{-# LANGUAGE MagicHash, NoMonomorphismRestriction, CPP #-}
+{-# LANGUAGE MagicHash, NoMonomorphismRestriction, FlexibleContexts, CPP #-}
 -- | Collections used within the Structure, currently aliases for the 'Vector' and 'MVector' types.
 module Bio.PDB.Structure.List(List(..), TempList,
                               initialNew, new, add, finalize, tempLength, empty, last,
